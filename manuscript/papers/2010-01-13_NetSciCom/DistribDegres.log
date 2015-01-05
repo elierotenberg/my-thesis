@@ -1,0 +1,376 @@
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=latex 2014.1.23)  23 JAN 2014 14:32
+entering extended mode
+**DistribDegres.tex
+(c:\Users\Elie\git\phd\papers\2010-01-13_NetSciCom\DistribDegres.tex
+LaTeX2e <2011/06/27>
+Babel <v3.8m> and hyphenation patterns for english, afrikaans, ancientgreek, ar
+abic, armenian, assamese, basque, bengali, bokmal, bulgarian, catalan, coptic, 
+croatian, czech, danish, dutch, esperanto, estonian, farsi, finnish, french, ga
+lician, german, german-x-2013-05-26, greek, gujarati, hindi, hungarian, iceland
+ic, indonesian, interlingua, irish, italian, kannada, kurmanji, latin, latvian,
+ lithuanian, malayalam, marathi, mongolian, mongolianlmc, monogreek, ngerman, n
+german-x-2013-05-26, nynorsk, oriya, panjabi, pinyin, polish, portuguese, roman
+ian, russian, sanskrit, serbian, slovak, slovenian, spanish, swedish, swissgerm
+an, tamil, telugu, turkish, turkmen, ukenglish, ukrainian, uppersorbian, usengl
+ishmax, welsh, loaded.
+(c:\Users\Elie\git\phd\papers\2010-01-13_NetSciCom\IEEEtran.cls
+Document Class: IEEEtran 2007/03/05 V1.7a by Michael Shell
+-- See the "IEEEtran_HOWTO" manual for usage information.
+-- http://www.michaelshell.org/tex/ieeetran/
+\@IEEEtrantmpdimenA=\dimen102
+\@IEEEtrantmpdimenB=\dimen103
+\@IEEEtrantmpcountA=\count79
+\@IEEEtrantmpcountB=\count80
+\@IEEEtrantmptoksA=\toks14
+LaTeX Font Info:    Try loading font information for OT1+ptm on input line 366.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\ot1ptm.fd"
+File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
+)
+-- Using 8.5in x 11in (letter) paper.
+-- Using DVI output.
+\@IEEEnormalsizeunitybaselineskip=\dimen104
+-- This is a 10 point document.
+\CLASSINFOnormalsizebaselineskip=\dimen105
+\CLASSINFOnormalsizeunitybaselineskip=\dimen106
+\IEEEnormaljot=\dimen107
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <5> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <5> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <7> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <8> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <9> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <10> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <11> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <11> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <12> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <17> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <17> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <20> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <20> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <24> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <24> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+\IEEEilabelindentA=\dimen108
+\IEEEilabelindentB=\dimen109
+\IEEEilabelindent=\dimen110
+\IEEEelabelindent=\dimen111
+\IEEEdlabelindent=\dimen112
+\IEEElabelindent=\dimen113
+\IEEEiednormlabelsep=\dimen114
+\IEEEiedmathlabelsep=\dimen115
+\IEEEiedtopsep=\skip41
+\c@section=\count81
+\c@subsection=\count82
+\c@subsubsection=\count83
+\c@paragraph=\count84
+\c@IEEEsubequation=\count85
+\abovecaptionskip=\skip42
+\belowcaptionskip=\skip43
+\c@figure=\count86
+\c@table=\count87
+\@IEEEeqnnumcols=\count88
+\@IEEEeqncolcnt=\count89
+\@IEEEtmpitemindent=\dimen116
+\c@IEEEbiography=\count90
+\@IEEEtranrubishbin=\box26
+) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\graphicx.sty"
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\keyval.sty"
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks15
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\graphics.sty"
+Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\trig.sty"
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\graphics.cfg"
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: dvips.def on input line 91.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\dvips.def"
+File: dvips.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
+))
+\Gin@req@height=\dimen117
+\Gin@req@width=\dimen118
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\url\url.sty"
+\Urlmuskip=\muskip10
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\color.sty"
+Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\color.cfg"
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package color Info: Driver file: dvips.def on input line 130.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\dvipsnam.def"
+File: dvipsnam.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
+))
+(c:\Users\Elie\git\phd\papers\2010-01-13_NetSciCom\DistribDegres.aux)
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 95.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\ot1pcr.fd"
+File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
+)
+
+LaTeX Warning: Citation `willinger' on page 1 undefined on input line 115.
+
+
+LaTeX Warning: Citation `DBLP:conf/infocom/LakhinaBCX03' on page 1 undefined on
+ input line 116.
+
+
+LaTeX Warning: Citation `DBLP:journals/jacm/AchlioptasCKM09' on page 1 undefine
+d on input line 116.
+
+
+LaTeX Warning: Citation `DBLP:journals/tcs/DallAstaABVV06' on page 1 undefined 
+on input line 116.
+
+
+LaTeX Warning: Citation `DBLP:conf/infocom/GuillaumeL05' on page 1 undefined on
+ input line 116.
+
+
+LaTeX Warning: Citation `DBLP:journals/cn/GuillaumeLM06' on page 1 undefined on
+ input line 116.
+
+
+LaTeX Warning: Citation `DBLP:conf/infocom/LatapyM08' on page 1 undefined on in
+put line 116.
+
+
+LaTeX Warning: Citation `willinger' on page 1 undefined on input line 118.
+
+
+LaTeX Warning: Citation `DBLP:conf/sigcomm/SherwoodBS08' on page 1 undefined on
+ input line 118.
+
+
+LaTeX Warning: Citation `DBLP:journals/ton/SpringMWA04' on page 1 undefined on 
+input line 118.
+
+
+LaTeX Warning: Citation `DBLP:journals/cn/VigerACMLFT08' on page 1 undefined on
+ input line 118.
+
+
+LaTeX Warning: Citation `DBLP:conf/imc/AugustinCOVFLMT06' on page 1 undefined o
+n input line 118.
+
+
+LaTeX Warning: Citation `spring04how' on page 1 undefined on input line 121.
+
+
+LaTeX Warning: Citation `DBLP:conf/imc/BenderSS08' on page 1 undefined on input
+ line 121.
+
+
+LaTeX Warning: Citation `DBLP:conf/sigcomm/SherwoodBS08' on page 1 undefined on
+ input line 121.
+
+
+LaTeX Warning: Citation `DBLP:journals/ton/SpringMWA04' on page 1 undefined on 
+input line 121.
+
+
+LaTeX Warning: Citation `DBLP:conf/infocom/LakhinaBCX03' on page 1 undefined on
+ input line 137.
+
+
+LaTeX Warning: Citation `DBLP:journals/jacm/AchlioptasCKM09' on page 1 undefine
+d on input line 137.
+
+
+LaTeX Warning: Citation `DBLP:journals/tcs/DallAstaABVV06' on page 1 undefined 
+on input line 137.
+
+
+LaTeX Warning: Citation `DBLP:conf/infocom/GuillaumeL05' on page 1 undefined on
+ input line 137.
+
+
+LaTeX Warning: Citation `DBLP:journals/cn/GuillaumeLM06' on page 1 undefined on
+ input line 137.
+
+
+LaTeX Warning: Citation `DBLP:conf/infocom/LatapyM08' on page 1 undefined on in
+put line 137.
+
+
+LaTeX Warning: Citation `willinger' on page 1 undefined on input line 137.
+
+
+LaTeX Warning: Citation `DBLP:conf/sigcomm/SherwoodBS08' on page 1 undefined on
+ input line 137.
+
+
+LaTeX Warning: Citation `DBLP:journals/ton/SpringMWA04' on page 1 undefined on 
+input line 137.
+
+
+LaTeX Warning: Citation `DBLP:journals/cn/VigerACMLFT08' on page 1 undefined on
+ input line 137.
+
+
+LaTeX Warning: Citation `DBLP:conf/imc/AugustinCOVFLMT06' on page 1 undefined o
+n input line 137.
+
+[1
+
+
+]
+
+LaTeX Warning: Citation `DBLP:conf/imw/BarfordBBC01' on page 2 undefined on inp
+ut line 143.
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 153.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 153.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 153.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 153.
+(c:\Users\Elie\git\phd\papers\2010-01-13_NetSciCom\approach.pstex_t
+File: approach.pstex Graphic file (type eps)
+
+<approach.pstex>)
+
+LaTeX Warning: Citation `planetlab' on page 2 undefined on input line 180.
+
+File: poisson_20_1M.eps Graphic file (type eps)
+<poisson_20_1M.eps>
+File: erdos_20_10M.eps Graphic file (type eps)
+ <erdos_20_10M.eps> [2]
+
+LaTeX Warning: Citation `DBLP:conf/infocom/LakhinaBCX03' on page 3 undefined on
+ input line 226.
+
+
+LaTeX Warning: Citation `DBLP:journals/cn/GuillaumeLM06' on page 3 undefined on
+ input line 226.
+
+
+LaTeX Warning: Citation `DBLP:journals/cn/GuillaumeLM06' on page 3 undefined on
+ input line 226.
+
+
+LaTeX Warning: Citation `DBLP:conf/infocom/LakhinaBCX03' on page 3 undefined on
+ input line 230.
+
+
+LaTeX Warning: Citation `DBLP:journals/jacm/AchlioptasCKM09' on page 3 undefine
+d on input line 230.
+
+
+LaTeX Warning: Citation `DBLP:conf/infocom/LakhinaBCX03' on page 3 undefined on
+ input line 239.
+
+
+LaTeX Warning: Citation `DBLP:journals/jacm/AchlioptasCKM09' on page 3 undefine
+d on input line 239.
+
+
+LaTeX Warning: Citation `willinger' on page 3 undefined on input line 249.
+
+
+LaTeX Warning: Citation `DBLP:journals/cn/VigerACMLFT08' on page 3 undefined on
+ input line 249.
+
+
+LaTeX Warning: Citation `DBLP:conf/imc/AugustinCOVFLMT06' on page 3 undefined o
+n input line 249.
+
+
+LaTeX Warning: Citation `DBLP:journals/cn/VigerACMLFT08' on page 3 undefined on
+ input line 249.
+
+
+LaTeX Warning: Citation `DBLP:conf/imc/AugustinCOVFLMT06' on page 3 undefined o
+n input line 249.
+
+[3]
+File: dyn.eps Graphic file (type eps)
+ <dyn.eps> [4]
+File: sources.valid.eps Graphic file (type eps)
+ <sources.valid.eps>
+File: targets.valid.eps Graphic file (type eps)
+ <targets.valid.eps>
+File: routelength.eps Graphic file (type eps)
+ <routelength.eps>
+File: constant-length.distrib.eps Graphic file (type eps)
+
+<constant-length.distrib.eps> [5]
+(c:\Users\Elie\git\phd\papers\2010-01-13_NetSciCom\DistribDegres.bbl)
+
+** Conference Paper **
+Before submitting the final camera ready copy, remember to:
+
+ 1. Manually equalize the lengths of two columns on the last page
+ of your paper;
+
+ 2. Ensure that any PostScript and/or PDF output post-processing
+ uses only Type 1 fonts and that every step in the generation
+ process uses the appropriate paper size.
+
+[6] (c:\Users\Elie\git\phd\papers\2010-01-13_NetSciCom\DistribDegres.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 1589 strings out of 493922
+ 26139 string characters out of 3144902
+ 80871 words of memory out of 3000000
+ 4907 multiletter control sequences out of 15000+200000
+ 28980 words of font info for 66 fonts, out of 3000000 for 9000
+ 841 hyphenation exceptions out of 8191
+ 26i,10n,22p,1195b,302s stack positions out of 5000i,500n,10000p,200000b,50000s
+
+Output written on DistribDegres.dvi (6 pages, 48308 bytes).

@@ -1,0 +1,147 @@
+% \chaptertitle{Standards d'Internet}
+% \label{app:protocoles}
+% \introformatting
+% 
+% Dans cette annexe, nous décrirons quelques détails utiles liés aux standards
+% d'Internet qui ont eu une importance particulière dans l'implémentation de nos
+% mesures.
+% 
+% \section{\ip}
+% 
+% Le protocole \ip est le protocole commun qui caractérise Internet. Il permet
+% l'envoi, l'acheminement et la réception de {\em paquets} entre des {\em hôtes}
+% identifiés par une {\em adresse \ip}. Chaque paquet est constitué d'un en-tête
+% et d'un contenu. La structure de l'en-tête \ip est donnée par la RFC\rfc{791}
+% (\reffig{ip-packet}).
+% 
+% \phfig{ip-packet}{Structure d'un en-tête \ip}{La structure de
+% l'en-tête d'un paquet \ip. Chaque ligne symbolise 32 bits (4
+% octets). L'offset indique le décalage par rapport au bit 0 de chaque
+% octet.}{ip-packet}
+% 
+% \section{\icmp}
+% 
+% Le protocole \icmp est le protocole de diagnostic réseau d'Internet. Il est
+% utilisé principalement pour échanger des informations relatives à
+% l'implémentation ou la disponibilité de certains services. \icmp se situe à la
+% couche supérieure à \ip, et un paquet \icmp est donc encapsulé dans
+% un paquet \ip; en particulier, en plus de ses en-têtes spécifiques, il est
+% accompagné des en-têtes \ip, qui indiquent notamment l'adresse source et
+% l'adresse destination. La structure de l'en-tête \icmp est donnée par la
+% RFC\rfc{792} (\reffig{icmp-packet}).
+% 
+% \phfig{icmp-packet}{Structure d'un en-tête \icmp}{La structure de
+% l'en-tête d'un paquet \icmp. Chaque ligne symbolise 32 bits (4
+% octets). L'offset indique le décalage par rapport au bit 0 de chaque
+% octet.}{icmp-packet}
+% 
+% \section{\udp}
+% 
+% Le protocole \udp est le support d'\udpping et l'un des plus fréquemment utilisé
+% sur Internet pour l'envoi de datagrammes sans garanties supplémentaires
+% d'acheminement, d'intégrité et de congestion (par opposition à \tcp). Il est
+% utilisé à la couche supérieur à \ip, et un paquet \udp est donc encapsulé dans
+% un paquet \ip; en particulier, en plus de ses en-têtes spécifiques, il est
+% accompagné des en-têtes \ip, qui indiquent notamment l'adresse source et
+% l'adresse destination. La structure de l'en-tête \udp est donnée par la
+% RFC\rfc{768} (\reffig{udp-packet}).
+% 
+% \phfig{udp-packet}{Structure d'un en-tête \udp}{La structure de
+% l'en-tête d'un paquet \udp. Chaque ligne symbolise 32 bits (4
+% octets). L'offset indique le décalage par rapport au bit 0 de chaque
+% octet.}{udp-packet}
+% 
+% \section{Adresses invalides}
+% 
+% Le protocole \ip prévoit initialement l'encodage des adresses sur $32$ bits,
+% soit un total de $2^32$ adresses disponibles, ce que nous exploitons
+% intensivement pour échantilloner des adresses uniformément. Certaines de ces
+% adresses sont cependant réservées et doivent être écartées de nos mesures car
+% elles ne correspondent pas, en principe, à des adresses publiques d'Internet.
+% Ces adresses réservées, donc invalides, sont principalement définies dans la
+% RFC\rfc{6890}. Les plages d'adresses réservées sont les suivantes sont indiquées
+% dans le \reftable{protocoles-ip-reserved}.
+% 
+% \begin{table}[!ht]
+% \centering
+% \resizebox{\columnwidth}{!}{
+% \begin{tabular}{|l|r|l|}
+% \hline
+% \multicolumn{1}{|c|}{Classe d'adresses} &
+% \multicolumn{1}{c|}{Nombre d'adresses} &
+% \multicolumn{1}{|c|}{Description} \\
+% \hline
+% 0.0.0.0/8			&	16777216			&	Diffusion ({\em broadcast}) dans un réseau
+% local\rfc{1700}
+% \\
+% 10.0.0.0/8			&	16777216			&	Communication dans un réseau privé\rfc{1918} \\
+% 100.64.0.0/8		&	4194304				&	Communication souscripteur/diffuseur \\ 
+% 					&						&	dans un NAT\rfc{6598} \\
+% 127.0.0.0/8			&	16777216			&	Hôte local ({\em loopback})\rfc{6890} \\
+% 169.254.0.0/16		&	65536				&	Autoconfiguration entre deux hôtes\rfc{6890} \\
+% 172.16.0.0/12		&	1048576				&	Communication dans un réseau privé\rfc{1918} \\
+% 192.0.0.0/29		&	8					&	Mécanismes de transition {\em
+% DS-Lite}\footnote{Dual-Stack Lite, utilisé pour n'attribuer qu'une adresse
+% \ip~v6 à un client, sans lui attribuer d'\ip~v4.}\rfc{6333} \\
+% 192.0.2.0/24		&	256					&	{\em TEST-NET}, exemples dans la
+% documentation\rfc{5737}
+% \\
+% 192.88.99.0/24		&	256					&	Diffusion {\em 6to4 anycast}\footnote{Mécanisme
+% utilisé pour diffuser des paquets \ip~v6 dans un réseau \ip~v4 sans utiliser
+% explicitement de tunnels.}\rfc{3068} \\
+% 192.168.0.0/16		&	65536				&	Communication dans un réseau privé\rfc{1918} \\
+% 198.18.0.0/15		&	131072				&	Tests de communication entre deux
+% sous-réseaux\rfc{2544} \\
+% 198.51.100/24		&	256					&	{\em TEST-NET-2}, exemples dans la
+% documentation\rfc{5737} \\
+% 203.0.113.0/24		&	256					&	{\em TEST-NET-3}, exemples dans la
+% documentation\rfc{5737} \\
+% 224.0.0.0/4			&	268435456			&	Multidiffusion ({\em multicast})\rfc{5771} \\
+% 240.0.0.0/4			&	268435456			&	Réservé pour un usage ultérieur\rfc{6890} \\
+% 255.255.255.255/32	&	1					&	Diffusion limitée ({\em limited
+% broadcast})\rfc{6890} \\
+% 					&	592708617			&	Nombre total \\
+% \hline
+% \end{tabular}
+% }
+% \caption[Adresses \ip réservées]{Ces classes d'adresses sont réservées à un
+% usage spécial et ne doivent pas être considérées comme de potentielles adresses
+% appartenant à des hôtes \ip.}
+% \label{table:protocoles-ip-reserved}
+% \end{table}
+% 
+% \section{Adresses censurées}
+% 
+% Au cours de nos expérimentations, nous avons toujours utilisé comme message de
+% nos sondes une adresse mail de contact, permettant aux administrateurs de nous
+% contacter en cas de problème. Certains de ces administrateurs nous ont
+% explicitement demandé de ne plus leur envoyer de sondes. Afin d'implémenter
+% cette limitation, nous avons entretenu une liste de censure ({\em blacklist}),
+% réutilisée à chaque nouvelle expérimentation
+% (\reftable{protocoles-ip-blacklist}).
+% 
+% \begin{table}[!ht]
+% \centering
+% \begin{tabular}{|l|l|}
+% \hline
+% \multicolumn{1}{|c|}{Adresse de départ} &
+% \multicolumn{1}{|c|}{Adresse de fin} \\
+% \hline
+% 63.214.32.0		&	63.214.39.255	\\
+% 63.215.104.0	&	63.215.207.255 	\\
+% 64.74.187.0		&	64.74.187.255	\\
+% 67.210.80.0		&	67.210.95.255	\\
+% 74.202.16.0		&	74.202.19.255	\\
+% 199.45.166.0	&	199.45.166.255	\\
+% 199.45.240.0	&	199.45.240.255	\\
+% 207.174.77.0	&	207.174.77.255	\\
+% 207.174.98.0	&	207.174.98.255	\\
+% 207.174.114.0	&	207.174.114.255	\\
+% 207.174.173.0	&	207.174.173.255	\\
+% 207.174.210.0	&	207.174.211.255	\\		
+% \hline
+% \end{tabular}
+% \caption[Adresses \ip censurées]{Ces plages d'adresses sont bannies de nos
+% expérimentations, à la demande de leurs administrateurs.}
+% \label{table:protocoles-ip-blacklist}
+% \end{table}

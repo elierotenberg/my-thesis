@@ -1,0 +1,612 @@
+\chaptertitle{Mesure des tables de routage}
+\label{chap:revtables}
+\introformatting
+
+\lettrine{L}{a} motivation sous-jacente aux travaux de mesure de la topologie
+d'Internet est diverse, et sa portée est souvent à la fois théorique et
+pratique. Bien souvent, cependant, son objectif principal est de fournir ou de
+préciser des paramètres qui sont ensuite injectés dans des modèles formels ou
+simulatoires qui visent à mieux comprendre, et éventuellement à optimiser, la
+performance du réseau. Cette performance peut s'exprimer en termes de fiabilité,
+de résilence aux pannes ou aux attaques, ou de capacité globale à acheminer du
+trafic. Dans tous les cas, on s'intéresse à la manière dont {\em les paquets
+sont acheminés sur le réseau} et plus précisément, à la manière dont les paquets
+sont {\em routés} sur le réseau. De la même manière dont nous avons conclu qu'il
+pouvait être plus pertinent de mesurer directement la distribution de degrés
+plutôt que de mesurer des cartes sur lesquelles on lirait la distribution de
+degrés, nous en sommes arrivés à l'objectif de mesurer directement le {\em
+comportement des routeurs} plutôt que de l'extrapoler à partir de modèles de
+graphes à distribution de degré fixée.
+
+En utilisant une méthode de mesure dérivée d'\udpping et une analyse fine des
+résultats de cette méthode, nous avons donc tenté de mesurer
+directement le comportement spécifique de certains routeurs, qui répondent à
+\udpping, pour effectuer leur activité de routage. Cette dernière peut la
+plupart du temps s'exprimer sous une forme très synthétique, qui correspond en
+outre à une implémentation matérielle ou logicielle réelle, la table de
+transmission ({\em forwarding table}), qui est une version compilée et optimisée
+de la table de routage ({\em routing table}) d'un routeur. C'est cette table de
+transmission que nous allons chercher à estimer. Nous commencerons par poser le
+contexte du problème en détaillant nos objets d'intérêts
+(\refsec{revtables-structure}). Puis nous montrerons de quelle manière nous
+pouvons utiliser les résultats d'\udpping pour préciser notre connaissance,
+exprimée sous forme de contraintes formelles, de la table de transmission d'un
+routeur ciblé (\refsec{revtables-constraints}). Nous combinerons des hypothèses
+de travail réalistes avec ces contraintes pour réaliser une inférence de la
+table de transmission (\refsec{revtables-inference}). Cette méthode sera
+éprouvée par une mesure réelle (\refsec{revtables-measurement}). Enfin, nous
+présenterons nos conclusions sur ce travail (\refsec{revtables-conclusion}).
+% Nous présenterons une application de portée méthodologique des résultats de
+% cette méthode porte sur la qualité de l'ensemble de moniteurs
+% (\refsec{revtables-monitors}), qui offre une validation supplémentaire de la
+% méthode décrite au~\refchap{udpping}, avant de conclure
+% (\refsec{revtables-conclusion}).
+
+\section{Structure des tables de transmission}
+\label{sec:revtables-structure}
+
+Un {\em routeur} est un hôte \LLL particulier, qui peut occuper diverses
+fonctions annexes, mais son rôle principal est assez simplement résumé :
+lorsqu'il reçoit un paquet dont il n'est pas la destination, il doit être
+capable de le transmettre ({\em forward}) sur l'une de ses interfaces, avec
+l'objectif ultime que ce paquet finisse par atteindre sa destination. Les
+routeurs implémentent donc localement des {\em politiques de routage}, qui sont
+définies par divers algorithmes de routages, et dont l'objectif global est
+d'offrir au réseau la capacité d'acheminer des paquets depuis n'importe quelle
+source vers n'importe quelle destination --- si possible rapidement.
+
+En règle générale, chaque routeur dispose d'une {\em table de routage}, qui
+prend la forme d'une liste de règles abstraites portant sur le comportement que
+le routeur doit adopter lorsqu'il reçoit des paquets à transmettre. Les règles
+dans cette table de routage sont d'origines variées. Elles peuvent provenir
+d'algorithmes de routages, tels que \bgp~\rfc{4271} ou \ospf~\rfc{2328},
+d'accords de routage ou de {\em peering} au sein de l'\as dont elles font
+partie, d'algorithmes de qualité de service ({\em QoS}) ou d'équilibrage de charge ({\em
+load-balancing}), ou encore de configuration statique \adhoc. La forme
+précise d'une table de routage est assez variable et dépend beaucoup des
+spécificités matérielles et logicelles du routeur, mais elle peut toujours être
+interprété comme un ensemble de règles abstraites qui, combinées entre elles,
+forment une fonction de routage $R : p \mapsto i(p)$ qui à chaque paquet $p$
+associent une interface $i(p)$ de ce routeur sur lequel il doit transmettre $p$.
+Remarquons que sous cette forme, $R$ n'est pas déterministe, puisqu'elle peut
+par exemple réaliser de l'équilibrage de charge ou une reconfiguration
+dynamique.
+
+En pratique, cependant, les problématiques liées à l'entretien de la table de
+routage, hétéroclite et complexe, dynamique, la rendent peu utilisables
+directement pour résoudre à une fréquence très soutenue les décisions de
+transmission, allant de quelques dizaines à plusieurs millions par seconde. Pour
+cette raison, la fonction de routage $R$ d'un routeur est généralement compilée
+sous une forme optimisée, qu'on appelle la {\em table de transmission} ({\em
+forwarding table}). La table de transmission est une version compilée de la
+table de routage, qui expose un comportement équivalent, mais qui est adaptée
+aux contraintes très fortes de performance auxquelles sont soumises les routeurs
+et en particulier les routeurs du c\oe{}ur. Ses implémentations reposent
+souvent sur du matériel spécifique qui implémente de gigantesques tables
+associatives très performantes nommées {\em Content-adressable memory} ({\em
+CAM}), mais qui peuvent être émulées sur des routeurs plus modestes par des
+tables de hachage en {\em RAM}. Dans tous les cas, il s'agit de réduire un
+ensemble de règles sémantiquement assez complexes à des règles dont la logique
+se réduit à la consultation d'une table pré-définie. Plus précisément, il s'agit
+de réduire la décision que le routeur doit réaliser quand il reçoit un paquet, à
+décider en fonction de l'adresse de destination de ce paquet, sur quel
+sous-ensemble de ses interfaces il peut la transmettre.
+
+Théoriquement, une table de transmission pourrait être {\em complète}, c'est à
+dire disposer d'autant d'entrées qu'il existe de destinations {\em possibles},
+c'est à dire environ $2^{32}$ correspondant aux 32 bits d'une adresse \ip. En
+pratique, il faudrait disposer d'une mémoire adressable de plusieurs milliards
+d'entrées. Pour diminuer cette taille et augmenter leur efficacité, les routeurs
+regroupent les entrées par {\em préfixes}. Si la fonction de routage $R$ d'un
+routeur $\overline{r}$ est telle que, pour un certain préfixe d'adresse $\rho/n$
+de longueur $n$, tous les paquets à destination d'une adresse qui est préfixée
+par $\rho/n$ doivent être transmis sur l'une des interfaces d'un ensemble fixé
+qu'on note $R(\rho/n) \subset \overline{r}$, alors on peut compiler toutes ces
+règles en une unique règle $\rho/n \leadsto R(\rho/n)$.
+Cette manière de procéder est d'autant plus efficace qu'en organisant les
+entrées d'une table par préfixe, on peut facilement trouver le plus long préfixe
+auquel la destination d'un paquet donné correspond, et donc trouver la règle
+{\em la plus spécifique}, celle que le routeur doit utiliser, pour transmettre
+ce paquet. De plus, elle permet d'exploiter l'organisation historique d'un grand
+nombre de réseaux en préfixes correspondant à l'attribution par l'\iana et ses
+mandataires régionaux de blocs d'adresses, formalisée par la methode \cidr ({\em
+Classless Inter-Domain Routing})~\cite{rfc1517,rfc1518,rfc1519,rfc4632}. Conçue
+précisément avec l'objectif de limiter la croissance de la taille des tables de
+transmission organisées par préfixes, cette méthode préconise l'attribution de
+blocs d'adresses contigus et correspondant à des préfixes. Cette méthode reste
+une recommandation qui peut très bien ne pas être respectée, particulièrement
+par les utilisateurs finaux des adresses, mais elle offre un cadre efficace au
+moins dans la mesure où elle est correctement implémentée par les autorités
+administratives des domaines de haut niveau, par exemple au niveau \as. Ces
+autorités étant concernées en premier lieu par le problème de la {\em mise à
+jour des tables} et de la {\em diffusion des routes}, au c\oe{}ur du
+fonctionnement d'algorithmes de routages tels que \bgp, elles sont enclines à
+utiliser la méthode \cidr pour limiter la lourdeur des échanges.
+
+Sur un plan très pragmatique, la méthode \cidr est commode puisqu'elle introduit
+une notation permettant de désigner un ensemble de $2^{32 - n}$ adresses sous la
+forme $\rho/n$ où $\rho$ est la représentation décimale de la première adresse du
+bloc (dont l'adresse binaire se termine donc par $n$ fois le bit 0).
+Le~\reftable{revtables-cidr-example} donne un exemple d'un fragment d'une table
+de transmission par préfixes présentée avec cette notation. Chaque ligne
+présente un préfixe $\rho/n$ et l'ensemble $R(\rho/n)$ des interfaces de sorties
+du routeur $\overline{r}$ correspondantes. Une telle ligne signifie que si
+$\overline{r}$ doit transmettre un certain paquet dont l'adresse de destination
+a pour plus long préfixe dans la table $\rho/n$, alors le routeur utilisera
+l'une des interfaces de $R(\rho/n)$ pour la transmettre.
+
+Dans la suite de ce chapitre, nous supposerons donc qu'une {\em table de
+transmission} d'un hôte $\overline{r}$ est définie par un ensemble $D = \{D_0,
+\ldots, D_n \}$ de {\em règles}, chaque règle étant formée par un couple
+$D_k = (\rho_k/n_k, R(\rho_k/n_k))$ avec $R(\rho_k/n_k) \subset \overline{r}$.
+
+\begin{table}[!ht]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+Préfixe de destination $\rho/n$	& Interfaces de sortie
+$R(\rho/n) \subset \overline{r}$ \\
+\hline
+$\ldots$			& $\ldots$ \\
+\hline
+$128.32.0.0/13$		& $\{ 83.238.96.26 \}$ \\
+\hline
+$128.10.0.0/13$		& $\{ 195.114.175.54 \}$ \\
+\hline
+$128.112.193.64/26$	& $\{ 83.238.96.26 \}$ \\
+\hline
+$128.112.139.0/26$	& $\{ 83.238.96.26, 195.114.175.54 \}$ \\
+\hline
+$128.114.63.0/26$	& $\{ 83.238.96.26, 195.114.175.54 \}$ \\
+\hline
+$\ldots$			& $\ldots$ \\
+\hline						
+\end{tabular}
+\caption[Table de transmission par préfixes CIDR]{Fragment d'une table de
+transmission par préfixe CIDR d'un routeur $\overline{r}$. Chaque règle associe
+un prefixe de l'adresse de destination avec un ensemble d'interfaces de sortie du routeur.}
+\label{table:revtables-cidr-example}
+\end{table}
+
+
+\section{Contraintes obtenues avec \udpping}
+\label{sec:revtables-constraints}
+
+Nous avons présenté la structure formelle des tables de transmission
+en~\refsec{revtables-structure}. Notre objectif dans cette section va être
+d'énoncer des {\em contraintes} sur la table de transmission d'un routeur donné
+qui répond aux sondes \udpping qui seront ultérieurement combinées avec des
+hypothèses d'inférence.
+
+Comme nous l'avons déjà expliqué précédemment (\refsec{udpping-one-to-one}),
+lorsqu'un hôte choisit l'interface de sortie qu'il va utiliser pour émettre un
+paquet \icmp, il utilise la même logique de routage que lorsqu'il effectue une
+transmission de paquets; au niveau \LLL, le fait que ce paquet soit à l'origine
+de l'hôte lui-même ou un paquet à transmettre est indifférent. Pour une certaine
+destination $m$, si une cible $\overline{t}$ utilise son interface $t$ pour
+émettre un paquet \icmp vers $m$, alors on peut en déduire que ce choix découle
+de sa logique de routage à l'égard de $m$. Cette logique de routage peut
+s'exprimer en termes de tables de transmission. Puisque $t$ a été choisie pour
+émettre en direction de $m$, alors il existe une certaine règle $D_m =
+(\rho_m/n_m, t)$ dans la table de transmission de $\overline{t}$ telle que
+$\rho_m/n_m$ est un préfixe de $m$, et en plus ce préfixe est le plus long parmi
+tous les préfixes de règles de la table de transmission de $\overline{t}$. En
+utilisant précisément \udpping pour faire générer un paquet \icmp à $t$ en
+direction d'un moniteur $m$, nous pouvons ainsi formaliser :
+
+\begin{proposition}[Contrainte sur la table de transmission issue d'\udpping]
+Soit $m$ un moniteur et $t$ une cible qui répond à \udpping ($m(t) \in
+\overline{t}$ est bien définie). Alors il existe une règle $(\rho_m/n_m, R)$
+dans la table de transmission de $\overline{t}$ telle que :
+\begin{itemize}
+  \item $\rho_m/n_m$ est un préfixe de $m$
+  \item $m(t) \in R$
+  \item $\rho_m/n_m$ est le plus long préfixe de $m$ dans la table de
+  transmission de $\overline{t}$
+\end{itemize}
+\end{proposition}
+
+Comme il existe nécessairement au moins une règle dont le préfixe est un
+préfixe de $m$ (quitte à ce que préfixe soit $0/0$ dans le cas trivial), cette
+contrainte peut se reformuler d'une manière plus inductive :
+
+\begin{proposition}[Contrainte sur la table de transmission issue d'\udpping
+(forme inductive)] Soit $m$ un moniteur et $t$ une cible qui répond à \udpping
+($m(t) \in \overline{t}$ est bien définie). Alors, pour toute règle $D
+= (\rho/n, R)$ dans la table de transmission de $\overline{t}$, si $\rho/n$ est
+le plus long préfixe de $m$ dans la table de transmission de $\overline{t}$, on
+a nécessairement $m(t) \in R$.
+\end{proposition}
+
+Si l'on organise l'espace {\sc IPv4} en fonction des préfixes binaires (comme on
+pourrait le faire avec tout intervalle contigu d'entiers), alors l'espace des
+adresses peut être interprété sous la forme d'un arbre ${\mathbb A}$ binaire
+équilibré de préfixes binaires. Chaque n\oe{}ud représente un préfixe $\rho/n$. La
+racine est le préfixe trivial $0/0$. Les fils du n\oe{}ud $\rho/n$ sont les deux
+préfixes $\rho.0/(n+1)$ et $\rho.1/(n+1)$\footnote{Ici et dans tout ce qui
+suit, $\rho.0$ (resp. $\rho.1$) représente le préfixe $\rho$ concaténé avec $0$
+(resp. avec $1$).}.
+Pour un routeur $\overline{t}$ donné, on définit alors ${\mathbb A}(\overline{t})$ qui est un étiquetage de ${\mathbb
+A}$, tel que l'étiquette $R(\rho/n)$ du n\oe{}ud $\rho/n$ est le plus petit
+sous-ensemble de $\overline{t}$ qui contient toutes les interfaces utilisées par
+$\overline{t}$ pour transmettre à des adresses préfixées par $\rho/n$. Autrement
+dit, on définit l'étiquette $R(\rho/n)$ d'un n\oe{}ud de manière inductive, de
+telle sorte que pour toute adresse $d$, $R(d/32) = R(d)$, et $R(\rho/n) =
+R(\rho.0/(n+1)) \cup R(\rho.1/(n+1))$. Réciproquement, à partir de ${\mathbb
+A}(t)$, il est aisé de calculer une table de transmission optimale qui soit
+compatible avec les règles exprimées par les étiquettes des feuilles.
+Il suffit de trouver tous les préfixes de l'arbre $\rho/n$ tels que
+$R(\rho.0/(n+1)) \neq R(\rho.1/(n+1))$ et d'exprimer les deux règles
+$D_{\rho.0/(n+1)} = (\rho.0/(n+1), R(\rho.0/(n+1))$ et $ D_{\rho.1/(n+1)} =
+(\rho.1/(n+1), R(\rho.1/(n+1))$.
+Dans ce cadre formel, une contrainte fournie pas \udpping s'exprime par $m(t) \in
+R(m/32)$ et, par induction, tous les ancêtres de $m/32$, c'est à dire tous les
+n\oe{}uds correspondants à des préfixes de $m$, doivent contenir $R(m)$ et donc
+$m(t)$.
+
+L'information obtenue avec \udpping depuis un seul moniteur $m$ reste très
+limitée. En revanche, nous pouvons utiliser \udpping de manière distribuée
+depuis un ensemble de moniteurs $M$ pour obtenir davantage d'information. Chaque
+moniteur de notre ensemble $M$ qui reçoit une réponse de $t$ fournit une
+contrainte sur ${\mathbb A}(t)$ et donc sur la table optimale qui en résulte.
+Remarquons que dans ce cas, la portée de l'ensemble des contraintes dépend
+beaucoup de $M$ et, notamment, de la répartition des bits de poids fort dans les
+adresses qui composent $M$. Par exemple, si tous les moniteurs appartiennent à
+un même préfixe de taille $n$, alors la portée des contrainte sera limitée aux
+$2^{32-n}$ adresses de destination qui correspondent à ce préfixe. À l'inverse,
+si notre ensemble de moniteurs est nombreux et réparti de manière homogène dans
+l'espace \ip, alors il fournira une information riche sur l'aspect de la table
+de transmission de la cible.
+ 
+
+\section{Inférence}
+\label{sec:revtables-inference}
+
+Nous avons expliqué dans la~\refsec{revtables-constraints} comment nous pouvons
+utiliser \udpping depuis un ensemble de moniteurs vers une certaine cible pour
+obtenir de l'information sur la table de transmission de cette cible en
+organisant les résultats en fonction des préfixes des moniteurs. Ces
+informations imposent des {\em conditions nécessaires} sur cette table de
+transmission. Mais beaucoup de tables de tranmissions sont compatibles avec ces
+conditions nécessaires. Nous pouvons formuler des hypothèses, fondées par
+d'autres travaux ou une connaissance \apriori de la forme des tables de
+transmission, pour choisir une table de tranmission en particulier parmi celles
+qui respectent ces contraintes. Le travail d'{\em inférence} consiste donc à
+formuler un choix parmi les tables de transmissions qui sont compatibles avec
+les contraintes que nous avons énoncées. Nous présenterons 3 schémas
+d'inférence, dont nous discuterons la pertinence : le {\em schéma le plus spécifique}
+(\refsubsec{revtables-inference-most-specific}), le {\em schéma le moins
+spécifique} (\refsubsec{revtables-inference-least-specific}), et le {\em schéma
+AS} (\refsubsec{revtables-inference-as}).
+
+\subsection{Schéma le plus spécifique}
+\label{subsec:revtables-inference-most-specific}
+
+Le schéma d'inférence le plus simple consiste à choisir, parmi les tables
+compatibles avec les contraintes engendrées par \udpping, celle qui ne réalise
+{\em aucune} hypothèse sur les destinations qui ne sont pas dans notre ensemble
+de moniteurs. Formellement, elle consiste à assigner à chaque destination $d$
+(et donc au préfixe $d/32$) qui n'est pas dans $M$, un ensemble d'interfaces de
+sorties vide ($R(d) = \emptyset$). Le calcul de la table de transmission associé
+devient trivial, puisqu'il suffit d'énoncer toutes les règles $(m/32, m(t))$,
+en fusionnant éventuellement les règles qui peuvent l'être de manière récursive.
+
+Ce schéma d'inférence est extrêmement simple tant sur le plan conceptuel que sur
+le plan pratique, mais il est peu réaliste, et surtout il est d'une portée très
+limitée, puisqu'il ne fournit aucune information sur le comportement de la cible
+pour des destinations qui ne sont pas dans l'ensemble des moniteurs.
+
+\subsection{Schéma le moins spécifique}
+\label{subsec:revtables-inference-least-specific}
+
+Le schéma d'inférence le plus spécifique est celui qui réalise le {\em moins}
+d'hypothèses sur le comportement de la cible. À l'extrême opposé, nous pouvons
+chercher le schéma résultant des hypothèses les plus généralisatrices possibles,
+tout en restant bien sûr dans le cadre des hypothèses formulées par la mesure
+\udpping. Pour cela, au lieu d'assigner aux feuilles inconnues de ${\mathbb
+A}(t)$ un ensemble d'interfaces vide, on complète l'arbre pour minimiser le
+nombre de règles total nécessaire à exprimer les contraintes de la mesure. Plus
+directement, pour chaque moniteur $m$, on calcule le plus grand sous-arbre qui
+contient $m$ et aucun autre moniteur, et on assigne à chaque feuille de cet
+arbre le même ensemble d'interfaces de sorties $R(m)$. De cette sorte, la règle
+issue de ce sous-arbre une fois projeté sous la forme d'une table de
+transmission est $D_m = (\rho/n, R(m))$, où $\rho/n$ est exactement la racine du
+sous-arbre en question.
+
+Ce schéma correspond tout simplement à supposer que chaque moniteur est un
+représentant d'un certain préfixe \cidr qui est utilisé par la cible pour
+arbitrer sa logique de routage. La méthode d'inférence correspond alors à
+trouver le plus court préfixe (le moins spécifique) qui corresponde à cette
+hypothèse. Bien entendu, cette hypothèse est très optimiste, et sa pertinence
+dépend beaucoup de la qualité de l'ensemble des moniteurs $M$. Si $M$ est
+suffisamment grand, et suffisamment bien réparti, on peut espérer qu'il parcoure
+bien l'ensemble des règles de la cible. Si ce n'est pas le cas, alors ce schéma
+fournit tout de même une approximation des règles de la cible qui sera d'autant
+plus pertinent que $M$ est grand et bien réparti.
+
+Comme la représentation complète de ${\mathbb A}(t)$ est lourde à manipuler,
+nous proposons un algorithme simple et efficace pour calculer le schéma le moins
+spécifique directement à partir du tableau associatif qui représente
+l'observation de $t$ depuis $M$ (\refalg{revtables-inference-least-specific}).
+Cet algorithme prend en argument l'ensemble des moniteurs $M$ organisé sous la
+forme d'un arbre binaire de recherche et un tableau associatif $R$ qui contient
+les contraintes fournies par \udpping associées à chaque moniteur, sous la forme
+d'un ensemble d'interfaces $R[m]$. La notation $M[a,b]$ désigne l'ensemble des
+adresses de $M$ qui sont comprises entre $a$ et $b$, mais cet ensemble est
+simplement représenté en mémoire par les deux entiers $a$ et $b$ et une
+référence à $M$. La représentation de $M$ sous la forme d'un arbre binaire de
+recherche permet de trouver rapidement ($O(\lg |M|)$\footnote{On note $\lg$ la
+fonction logarithme binaire, proportionnelle à la fonction $\ln$.}) la plus
+petite et la plus grande adresse de $M$ dans {\sc InférerTable}($M$, $R$). Dans
+{\sc TrouverPivot}($M$, $R$, $\rho/n$, $a$, $b$), elle permet également de
+trouver rapidement ($O(\lg |M[a, b]|) < O(\lg |M|)$) la {\em plus grande adresse
+de $M[a, b]$ préfixée par $p.0/(n+1)$} et la {\em plus petite adresse de $M[a,
+b]$ préfixée par $p.1/(n+1)$}. Dans {\sc TousIdentiques}($M$, $R$, $a$, $b$),
+chaque comparaison $R(m) = R(a)$ consiste à comparer deux listes de taille
+majorée par $|\overline{t}|$; la complexité totale d'un appel de cette fonction
+est donc $O(|M[a,b]| \times |\overline{t}|)$. En dehors de ces points
+techniques, cet algorithme est simplement une résolution de type
+diviser-pour-régner qui découpe les sous-problèmes de $M$ selon un pivot dont
+le calcul s'effectue en $O(\lg |M|)$ et avec une sous-routine dont le calcul
+s'effectue en $O(|M[a,b]| \times |\overline{t}|)$. Sa complexité totale est donc
+de $O(|M| \lg |M|)$ en amortissant la complexité de la sous-routine. La
+terminaison est évidente car si $n = 32$, alors $\rho/n$ contient au plus un
+élément, \afortiori $M \cap \rho/n$ contient au plus un élément et donc {\sc
+TousIdentiques}($M$, $R$, $a$, $b$) renvoie vrai. La preuve de la correction est
+également assez directe, puisqu'il suffit de montrer les invariants suivants :
+\begin{itemize}
+  \item Si $(m_0, m_1) =$ {\sc TrouverPivot}($R$, $\rho/n$, $a$, $b$), alors
+  $M[a,b] = M[a, m_0] \cup M[m_1, b]$, et tous les moniteurs de $M[a, m_0]$
+  admettent $\rho.0/n+1$ comme préfixe, et tous les moniteurs de $M[m_1, b]$
+  admettent $\rho.1/n+1$ comme préfixe.
+  \item {\sc TousIdentiques}($M$, $R$, $a$, $b$) renvoie {\sc vrai} si et
+  seulement si tous les moniteurs de $M[a, b]$ admettent la même contrainte
+  (égale à $R(a)$ en particulier).
+  \item Si $D =$ {\sc InférerSousTable}($M$, $R$, $\rho/n$, $a$, $b$), alors $D$
+  est la plus petite (en termes de taille de la liste $D$) table de transmission
+  compatible avec $R$.
+\end{itemize}
+
+Les deux premiers invariants sont immédiats, et le troisième découle des deux
+premiers.
+
+\begin{algorithm}
+\caption{Inférence du schéma le moins spécifique}
+\label{alg:revtables-inference-least-specific}
+\begin{algorithmic}
+\Function{TrouverPivot}{$R$, $\rho/n$, $a$, $b$}
+\State {\sc renvoyer $(\max \{ m \in M[a, b], m \in \rho.0/(n+1)\}, \min \{ m \in
+M[a, b], m \in \rho.1/(n+1)\})$}
+\EndFunction
+\Function{TousIdentiques}{$M$, $R$, $a$, $b$}
+\State {\sc renvoyer $\wedge_{m \in M[a, b]} (R(m) = R(a))$}
+\EndFunction
+\Function{InférerSousTable}{$M$, $R$, $\rho/n$, $a$, $b$}
+\If{{\sc TousIdentiques}($M$, $R$, $a$, $b$)}
+	\State {\sc renvoyer $\{(\rho/n, R(a))\}$}
+\Else
+	\State $(m_0, m_1) \gets ${\sc TrouverPivot}($R$, $\rho/n$, $a$, $b$)
+	\State $D_0 \gets ${\sc InférerSousTable}($M$, $R$, $\rho.0/(n+1)$, $a$, $m_0$)
+	\State $D_1 \gets ${\sc InférerSousTable}($M$, $R$, $\rho.1/(n+1)$, $m_1$, $b$)
+	\State {\sc renvoyer} $D_0 \cup D_1$
+\EndIf
+\EndFunction
+\Function{InférerTable}{$M$, $R$}
+\State {\sc renvoyer InférerSousTable($M$, $R$, $0/0$, $\min M$, $\max M$)}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Schéma AS}
+\label{subsec:revtables-inference-as}
+
+Nous avons vu que le schéma le plus spécifique et le schéma le moins spécifique
+réalisent tous les deux des hypothèses extrêmes quant à la représentativité de
+l'ensemble de moniteurs. Le premier ne s'autorise aucune hypothèse et sa portée
+est donc très limitée. Inversement, le second fait des hypothèses extrêmement
+optimistes et sa fiabilité dépend énormément de la qualité de l'ensemble des
+moniteurs. En particulier, si l'ensemble des moniteurs est réduit à quelques
+moniteurs mais dont les premiers bits sont très bien répartis, alors on va
+inférer des règles avec des préfixes très courts, donc très généraux. Pour
+limiter le risque d'inférer des préfixes trop courts pour être réalistes, et
+plus généralement pour se limiter à des préfixes qu'il semble réaliste de
+trouver dans une table de tranmission réelle, nous adaptons le schéma le moins
+spécifique en ajoutant une restriction : tous les préfixes conservés doivent
+correspondre à un préfixe revendiqué par un \as.
+
+En pratique, la méthode d'inférence est sensiblement la même que celle décrite
+dans l'\refalg{revtables-inference-least-specific}. Pour l'adapter, au lieu de
+renvoyer le préfixe $\rho/n$ dans {\sc InférerSousTable}, on consulte un arbre
+binaire de recherche $V$ représentant l'ensemble des préfixes revendiqués par
+des \as (cette opération a une complexité négligeable si l'arbre de recherche
+équilibré est précalculé).
+Si $\rho/n$ est un tel préfixe, on le renvoie effectivement; sinon, cela
+signifie que le préfixe n'est pas assez spécifique (trop court) pour
+correspondre à un préfixe d'\as, et on poursuit la division. Le résultat de
+cette adaptation est l'\refalg{revtables-inference-as}. La liste des préfixes
+revendiqués par les \as (principalement dans le cadre de l'implémentation de
+\bgp) est disponible auprès de sources publiques, comme par exemple
+Routeviews~\cite{routeviews} et Caida~\cite{caida}. Elle peut être de taille
+conséquente (plusieurs centaines de millions d'entrées), mais la représentation
+sous forme d'un arbre binaire de recherche modélisant un ensemble peut-être
+calculée une seule fois pour un ensemble de cibles quelconque.
+
+
+
+\begin{algorithm}
+\caption{Inférence du schéma AS}
+\label{alg:revtables-inference-as}
+\begin{algorithmic}
+\Function{TrouverPivot}{$R$, $\rho/n$, $a$, $b$}
+\State {\sc renvoyer $(\max \{ m \in M[a, b], m \in \rho.0/(n+1)\}, \min \{ m \in
+M[a, b], m \in \rho.1/(n+1)\})$}
+\EndFunction
+\Function{TousIdentiques}{$M$, $R$, $a$, $b$}
+\State {\sc renvoyer $\wedge_{m \in M[a, b]} (R(m) = R(a))$}
+\EndFunction
+\Function{InférerSousTable}{$M$, $R$, $V$, $\rho/n$, $a$, $b$}
+\If{$(\textsc{TousIdentiques}(M, R, a, b)) \wedge (\rho \in V)$}
+	\State {\sc renvoyer $\{(\rho/n, R(a))\}$}
+\Else
+	\State $(m_0, m_1) \gets ${\sc TrouverPivot}($R$, $\rho/n$, $a$, $b$)
+	\State $D_0 \gets ${\sc InférerSousTable}($M$, $R$, $\rho.0/(n+1)$, $a$, $m_0$)
+	\State $D_1 \gets ${\sc InférerSousTable}($M$, $R$, $\rho.1/(n+1)$, $m_1$, $b$)
+	\State {\sc renvoyer} $D_0 \cup D_1$
+\EndIf
+\EndFunction
+\Function{InférerTable}{$M$, $R$}
+\State {\sc renvoyer InférerSousTable($M$, $R$, $0/0$, $\min M$, $\max M$)}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\section{Mesure réelle avec \planetlab}
+\label{sec:revtables-measurement}
+
+Afin de vérifier la faisabilité de notre méthode, nous avons réalisé une mesure
+\udpping distribuée avec pour objectif d'appliquer notre méthode d'inférence des
+tables de transmission à un ensemble de cibles réelles. Nous détaillerons
+d'abord les conditions de cette mesure
+(\refsubsec{revtables-measurement-setup}), puis les résultats que nous en avons
+tiré à l'aide de notre méthode d'inférence
+(\refsubsec{revtables-measurement-results}).
+
+\subsection{Conditions de la mesure}
+\label{subsec:revtables-measurement-setup}
+La faisabilité pratique d'une mesure \udpping distribuée a déjà été constatée
+lors d'une expérience réelle décrite
+au~\refchap{udpping}\footnote{\refsec{udpping-measurement}}.
+Cependant, nous avons choisi de réaliser une nouvelle mesure pour expérimenter
+notre méthode. La première raison est que pour l'inférence du schéma \as décrit
+en~\refsubsec{revtables-inference-as}, nous devons disposer d'une liste des
+préfixes revendiqués par les \as sur la même période de temps que la mesure. La
+seconde raison est que nous pratiquons une mesure beaucoup plus focalisée. Là où
+nous visions à collecter un maximum de cibles correspondant à un tirage
+uniformément aléatoire dans le but de réaliser une estimation de la distribution
+de degré au~\refchap{udpping}, l'objectif est cette fois-ci d'obtenir des tables
+de transmission aussi exactes que possible.
+Nous avons donc limité notre ensemble de cibles à un ensemble que nous avions
+préalablement construit comme répondant très bien aux sondes \udpping, et au
+lieu d'envoyer une unique sonde \udpping depuis chaque moniteur vers chaque
+cible, nous avons répété l'envoi de sondes plusieurs fois pour capturer
+l'équilibrage de charge réalisé par chaque cible.
+
+Pour réaliser notre mesure, nous avons à nouveau sollicité l'infrastructure
+\planetlab. Au moment de notre prélèvement, notre ensemble de moniteurs $M$
+était composé de 548 moniteurs répartis dans 193 \as. Notre ensemble de
+cibles $T$ était constitué de 2276 cibles extraites d'une mesure antérieure et
+retenues pour avoir une bonne responsivité à \udpping. Notre mesure a consisté
+en une série de 30 répétitions d'\udpping depuis chaque moniteur vers chaque
+cible, concentrées sur un total d'environ 10 minutes.
+
+\subsection{Résultats de la mesure}
+\label{subsec:revtables-measurement-results}
+
+L'aggrégation des résultats nous a fourni une liste $L$ de triplets de la forme
+$(m, m(t), t)$. Nous avons calculé pour chaque moniteur $m$ et pour chaque cible
+$t$ l'ensemble $R_t(m) = \{ m(t), (m, m(t), t) \in L \}$ des interfaces utilisées
+par $t$ pour répondre à $m$. Par ailleurs, nous avons calculé l'arbre binaire de
+recherche de $M$, utilisé par nos méthode d'inférence, et l'arbre binaire de
+recherche $V$ basé sur les données {\em Routeviews} les plus récentes au même
+moment. À l'aide de ces données, nous avons appliqué les 3 méthodes d'inférence
+décrites en~\refsec{revtables-inference}.
+
+\realfig{revtables-impact-method}{Impact du schéma d'inférence sur la taille des
+tables inférées}{Pour chacune des 3 méthodes d'inférence, on calcule la
+distribution cumulative inverse du nombre d'entrées dans les tables de
+transmission. Pour chaque point $x$ en ordonnée, on trace le nombre de cibles
+dont la table inférée comporte un nombre d'entrées supérieur ou égal à
+$x$.}{revtables-impact-method}
+
+Notre première observation porte tout simplement sur la {\em taille} des tables
+inférées, c'est à dire sur le {\em nombre de règles}, en fonction de la méthode
+d'inférence utilisée (\reffig{revtables-impact-method}). Comme attendu, plus le
+schéma est spécifique, plus la table de transmission inférée possède d'entrées.
+En effet, les hypothèse généralisatrices permettent de fusionner des sous-arbres
+possédant les mêmes étiquettes dans l'algorithme d'inférence. Plus il y a
+d'hypothèses généralisatrices, moins il y a donc de sous-arbres nécessitant
+l'ajout d'une règle spécifique. Ceci est bien entendu cohérent avec
+l'utilisation pratique des préfixes \cidr qui sont historiquement conçus
+précisément pour limiter la taille des tables de tranmission.
+
+Notre seconde observation porte sur l'impact du nombre de moniteurs. Comme nous
+l'avons suggéré précédemment, la répartition de l'ensemble des moniteurs dans
+l'espace \ip, en particulier la répartition des bits de poids fort, affecte
+considérablement la table de transmission inférée pour une cible donnée. Pour
+témoigner de l'ampleur du phénomène, nous avons émulé des mesures sur divers
+nombre de moniteurs en restreignant notre analyse à des jeux de données partiels
+limités à une fraction des moniteurs dont nous disposions réellement. Nous avons
+tracé la distribution cumulative inverse de la taille des tables inférées pour
+chaque schéma d'inférence, pour plusieurs fractions de notre ensemble de
+moniteurs totalisant $|M| = 548$ hôtes 
+(\reffig{revtables-impact-monitors-least-specific},
+\reffig{revtables-impact-monitors-most-specific},
+\reffig{revtables-impact-monitors-as}). Ces figures montrent que le nombre de
+moniteurs utilisés est trop limité pour obtenir une information aussi riche que
+celle que nous recherchons, car on observe une sensible différence entre la
+distribution pour $p = 0.9$ et $p = 1.0$ pour les trois schémas. Cependant, la
+forte cohérence entre les aspects des distributions pour des valeurs de $p$
+distinctes suggèrent que leurs formes générales correspondent au moins à une
+caractéristique locale. 
+
+\realfig{revtables-impact-monitors-least-specific}{Impact
+du nombre de moniteurs sur la taille des tables inférées (schéma le moins
+spécifique)}{Pour chaque fraction $p$, on calcule la taille des tables inférées
+avec le schéma le moins spécifique en se restreignant à $p|M|$ moniteurs. Pour
+chaque point $x$ en ordonnée, on trace le nombre de cibles dont la table inférée
+comporte un nombre d'entrées supérieur ou égal à
+$x$.}{revtables-impact-monitors-least-specific}
+
+\realfig{revtables-impact-monitors-most-specific}{Impact du nombre de moniteurs
+sur la taille des tables inférées (schéma le plus spécifique)}{Pour chaque
+fraction $p$, on calcule la taille des tables inférées avec le schéma le plus
+spécifique en se restreignant à $p|M|$ moniteurs.
+Pour chaque point $x$ en ordonnée, on trace le nombre de cibles dont la table
+inférée comporte un nombre d'entrées supérieur ou égal à
+$x$.}{revtables-impact-monitors-most-specific}
+
+\realfig{revtables-impact-monitors-as}{Impact du nombre de moniteurs sur la
+taille des tables inférées (schéma \as)}{Pour chaque fraction $p$, on calcule la
+taille des tables inférées avec le schéma \as en se restreignant à
+$p|M|$ moniteurs. Pour chaque point $x$ en ordonnée, on trace le nombre de
+cibles dont la table inférée comporte un nombre d'entrées supérieur ou égal à
+$x$.}{revtables-impact-monitors-as}
+%  \section{Qualité d'un ensemble de moniteurs} \label{sec:revtables-monitors}
+
+\section{Conclusion}
+\label{sec:revtables-conclusion}
+
+Notre travail sur \udpping (\refchap{udpping}) nous a permis de mesurer une
+propriété du c\oe{}ur de la topologie physique d'Internet, sa distribution de
+degrés. Notre travail dans ce chapitre a démontré qu'\udpping nous permet
+d'obtenir une information plus complète et plus précise, puisqu'elle permet, en
+plus de les {\em quantifier}, de {\em qualifier} les interfaces d'un routeur du
+c\oe{}ur. En effet, nous avons montré qu'une utilisation judicieuse d'un
+ensemble de moniteurs permet de déterminer, au moins dans certains cas, {\em
+comment} ces interfaces sont utilisées. Cette information est plus riche et peut
+être injectée dans un modèle, formel ou simulatoire, plus représentatif du
+réseau, particulièrement s'il vise à modéliser la manière dont les paquets
+circulent à travers les routeurs du c\oe{}ur.
+
+Cette approche possède des limites, dans la mesure où, selon la confiance (ou la
+connaissance {\em a priori}) que l'on a de l'ensemble des moniteurs dont on
+dispose, on peut estimer le comportement d'un routeur de manière plus ou moins
+complète. Dans son interprétation la plus prudente, cette approche ne permet de
+caractériser le comportement d'une cible que vis à vis des moniteurs uniquement.
+Si l'on s'autorise à postuler que chaque moniteur est représentatif de l'unité
+administrative de routage dont il fait partie, caractérisée par ou plusieurs
+préfixes \cidr, cependant, on peut sensiblement augmenter la portée de
+l'approche.
+Dès lors, notre méthode offre une information pertinente sur la réunion des
+unités dans lesquelles on dispose d'au moins un moniteur.
+
+À l'inverse, la réflexion sous-jacente à ces conclusions nous permet d'envisager
+une nouvelle manière de caractériser la qualité d'un ensemble de moniteurs, en
+considérant les classes de colocalisation induites par ces unités
+administratives. Si un moniteur est interprété comme un représentant d'une
+unité administrative, alors deux moniteurs représentant la même unité
+administrative sont redondants vis à vis d'\udpping. Réciproquement, si deux
+moniteurs ne {\em font pas} partie de la même unité administrative, alors {\em
+a priori} ils ne sont pas redondants, et s'ils {\em apparaissent} redondants
+{\em a posteriori} pour une cible donnée, c'est que cette cible se comporte de
+manière identique vis à vis de leurs deux unités.
