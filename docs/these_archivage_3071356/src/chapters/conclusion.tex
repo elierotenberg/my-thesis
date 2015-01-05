@@ -1,0 +1,433 @@
+\chaptertitle{Conclusions et perspectives}
+\label{chap:conclusion}
+\introformatting
+
+Dans cette dernière partie, nous ferons le bilan de nos contributions puis nous
+détaillerons les perspectives que nous avons identifiées à partir des travaux
+que nous avons menés.
+
+\section{Contributions}
+\label{sec:conclusion-contribs}
+
+L'une des préoccupations principales tout au long de ce travail de thèse a été
+de tenter de s'abstraire d'un grand nombre d'hypothèses implicites du domaine,
+pour les réexaminer à l'aune d'une approche qui se voulait à la fois rigoureuse
+et pragmatique. Notre première contribution a donc été d'adopter une posture
+volontairement agnostique et de {\bf reprendre l'interprétation et la
+formalisation de nombreux objets}. L'interprétation rigoureuse de \traceroute
+(\refchap{traceroute}), le fonctionnement d'\udpping (\refchap{udpping}), et
+l'interprétation des tables de transmission (\refchap{revtables}), résultent de
+cette approche sciemment naïve. Notre contribution se situe notamment dans une
+description pragmatique qui tient compte de l'interprétation assez libérale des
+RFCs et autres documents normatifs par les acteurs réels. Notre interprétation
+nous a permis de mieux comprendre les limites de certaines approches
+historiques, mais également d'ouvrir la voie pour de nouvelles approches.
+
+C'est ainsi que nous avons décidé d'utiliser \traceroute non pas pour collecter
+des cartes, mais pour tenter de {\bf mesurer directement une propriété
+topologique qui nous intéressait} : la distribution de degré. Dans ce contexte,
+nous avons dû remettre en question la définition même de distribution de degré,
+et distinguer différentes modélisation du même objet, en l'occurence le réseau
+\LL et le réseau \LLL. La méthode de mesure que nous avons établi avec
+\traceroute nous permet d'{\bf obtenir la liste d'au moins une adresse de chacun
+des voisins au niveau \LLL d'un routeur cible}, pour un coût total (en terme de
+charge réseau) très limité, une approche validée par la simulation.
+Toutefois, cette approche suppose que le voisinnage de la cible ne bloque pas
+les paquets \icmp, une hypothèse qui tend à être remise en cause.
+
+Cette limitation nous a incité à réaliser une analyse de l'échantillonage des
+degrés dans un graphe, et nous a permis de conclure qu'il suffisait pour estimer
+correctement la distribution de degré d'un échantillon de taille relativement
+limitée (quelques milliers de n\oe{}uds), pour peu qu'on dispose d'une
+estimation très précise du degré de chaque n\oe{}ud. C'est ainsi que nous avons
+conçu la primitive \udpping (\refchap{udpping}) : une {\bf primitive de mesure
+très exigeante sur la cible, mais qui estime très précisément son degré}.
+Afin d'en tirer l'estimation de la propriété qui nous intéressait, nous avons
+également réalisé un {\bf protocole de mesure}, capable non seulement d'obtenir
+la propriété recherchée (le nombre d'interfaces de la cible), mais également de
+détecter les cas pouvant biaiser la distribution finale. Nous avons
+notamment implémenté un outil dérivé d'\udpping, \udpexplore, qui permet
+d'identifier la liste des hôtes séparant un moniteur du c\oe{}ur de la topologie
+physique. Un des aspects les plus importants de notre contribution porte
+précisément sur une analyse rigoureuse des effets de certaines configurations
+topologiques sur notre primitive de mesure, comment les détecter, et comment les
+corriger. Cette analyse est validée par des simulations sur plusieurs modèles de
+topologies, en particulier des topologies homogènes et hétérogènes. Une de nos
+conclusions est que nous sommes capables d'{\bf estimer avec une très grande
+confiance les fractions de n\oe{}uds de faible degré (<10)} dans le c\oe{}ur de
+la topologie physique, et qu'à l'inverse, nous sommes capables de {\bf majorer
+avec une grande confiance la fraction des n\oe{}uds de degré supérieur à un
+certain degré $d$}, en extrapolant leur fréquence d'apparition théorique à
+partir de leur fréquence d'apparition dans notre échantillon. Cette dernière
+contribution est une contribution importante, notamment puisqu'elle repose sur
+un raisonnement solide et des hypothèses très clairement établies.
+
+En complément de l'objet que nous souhaitions initialement mesurer, la
+distribution de degré, notre primitive \udpping nous a permis d'obtenir une
+information plus précise que le nombre de leurs interfaces pour les cibles qui y
+répondent. En effet, dans une certaine mesure, nous avons établi une manière
+d'{\bf estimer la table de transmission} (\refchap{revtables}) d'un routeur qui
+répond aux sondes \udpping. Si cette information n'est pas nécessairement simple
+à exploiter avec des modèles de graphes très généralistes, elle donne
+indiscutablement une information beaucoup plus riche que le simple degré sur la
+manière dont l'information {\em circule} à travers le réseau.
+
+Outre les résultats que nous avons obtenu sur la distribution de degré aux
+niveaux \LL et \LLL, et les tables de transmission, cette thèse a été l'occasion
+d'aborder la problématique plus générale de la métrologie des grands réseaux.
+Nous avons esquissé, à travers la mesure d'Internet, la problématique de {\bf
+l'estimation d'une propriété topologique d'un grand réseau réel à l'aide d'une
+primitive de mesure}. La méthodologie que nous avons employée ici puise
+largement dans une connaissance du domaine d'application spécifique du réseau
+Internet, mais elle peut être conceptuellement étendue à beaucoup d'autres
+cadres; c'est d'ailleurs l'une de nos principales perspectives
+(\refsubsec{conclusion-sampling}). Plus généralement, nous avons effectué un
+travail exploratoire, qui, au-delà des résultats direct, a levé le voile sur un
+certain nombre de perspectives. La {\bf description et l'organisation de ces
+perspectives} présentée ci-dessous constitue une contribution propre.
+
+\section{Perspectives}
+\label{sec:conclusion-perspectives}
+
+Nous avons organisé les perspectives suscitées par nos travaux en trois
+catégories : celles qui relèvent de l'approfondissement de l'utilisation
+d'\udpping (\refsubsec{conclusion-udpping}), celles qui généralisent l'approche
+d'échantillonage orienté propriété (\refsubsec{conclusion-sampling}) à d'autres
+propriétés ou d'autres réseaux, et enfin, des nouveaux objets de la topologie
+d'Internet (\refsubsec{conclusion-objects}) qui nous semblent être d'un intérêt
+particulier.
+
+\subsection{Approfondissement d'\udpping}
+\label{subsec:conclusion-udpping}
+
+L'outil \udpping que nous avons mis au point et dont nous avons analysé le
+fonctionnement représente une primitive de mesure précise et fiable, que nous
+avons conçu pour identifier les interfaces des routeurs du c\oe{}ur
+(\refchap{udpping}) et qualifier leur utilisation (\refchap{revtables}).
+Cependant, un certain nombre de questions restent ouvertes et pourraient faire
+l'objet d'approfondissements.
+
+\subsubsection{Validation de la mesure}
+
+L'une des perspectives les plus importantes pour la validation de notre travail,
+outre les garanties théoriques et simulatoires que nous avons déjà présenté,
+serait de confronter les interfaces identifiées par \udpping avec la liste des
+interfaces réelles d'un routeur du c\oe{}ur.
+
+La mesure réalisée par \udpping est d'autant plus difficile à valider qu'il
+n'existe bien sûr pas d'annuaire public des interfaces des routeurs du c\oe{}ur
+(sans quoi la mesure serait d'un intérêt très limité). Pour valider la liste des
+interfaces obtenues avec \udpping distribué, il faudrait disposer d'un accès à
+la liste des interfaces d'un routeur du c\oe{}ur qui répond à \udpping. Or, les
+routeurs du c\oe{}ur appartiennent le plus souvent à des institutions de grande
+ampleur, qui ne sont pas nécessairement enclines à confier un accès de cette
+nature.
+Les routeurs du c\oe{}ur sont en effet souvent des machines extrêmement onéreuses
+(les prix se chiffrent au minimum en dizaines de milliers de dollars, allant
+jusqu'à plusieurs centaines de milliers) et leur configuration peut être
+considérée comme une information stratégique. Valider le fonctionnement
+d'\udpping distribué de cette manière suppose donc un travail délicat, afin
+de convaincre l'autorité responsable d'un tel routeur de fournir la liste de ses
+interfaces et, idéalement, sa table de transmission. Cette perspective nous
+semble toutefois importante dans la mesure où elle permettrait de valider ou
+d'invalider clairement les résultats de notre mesure et notre méthode.
+
+\subsubsection{Dynamique et mesure longue}
+
+Notre travail avec \udpping avait pour objectif de capturer une estimation de la
+distribution de degré des routeurs du c\oe{}ur de la topologie physique à un
+instant donné, et à cet effet, nous avons paramétré notre mesure afin qu'elle
+soit la plus brève possible (sans surcharger les cibles) pour minimiser l'effet
+de la dynamique du réseau.
+
+Pourtant, puisque nous avons justifié la validité de notre protocole de mesure
+"instantané", on peut précisément envisager de répéter cette mesure
+régulièrement au cours du temps, pour capturer la dynamique à moyen et long
+terme. Une hypothèse fréquente est que le c\oe{}ur d'Internet est relativement
+statique, mais cette hypothèse n'est pas étayée par des mesures fiables. Nous
+proposons deux protocoles complémentaires afin d'explorer cette piste. Le
+premier consiste à se fixer un ensemble de cibles répondant à \udpping et de
+répéter la mesure \udpping distribué à intervalle régulier pendant une longue
+durée, par exemple toutes les 24h pendant 6 mois, et d'observer l'évolution de
+la liste des interfaces de chaque cible pendant cette période. Cette mesure
+permettrait de mesurer l'évolution de la liste des interfaces de {\em chaque}
+routeur de notre ensemble de cibles. Le second protocole, complémentaire du
+premier, consiste à s'intéresser non pas à un ensemble de cibles fixé, mais à
+évaluer à la même fréquence la distribution de degré des routeur du c\oe{}ur de
+la topologie physique, c'est à dire à réaliser un nouvel échantillonage uniforme
+à chaque itération. De cette manière, on bénéficie du travail d'analyse que nous
+avons décrit au \refchap{udpping}, et on peut s'intéresser à l'évolution de la
+{\em distribution} plutôt qu'à l'évolution des listes d'interfaces, plus
+exposées aux artefacts de mesure. Ce second protocole est cependant plus coûteux
+pour le réseau, puisque la construction d'une liste uniforme de cibles requiert
+l'envoi d'un très grand nombre de sondes \udpping à la recherche de cibles y
+répondant.
+
+\subsubsection{Autres ensembles de moniteurs}
+
+L'une des problématiques mises en évidence par tous nos travaux sur la mesure
+de la topologie d'Internet est l'importance de l'ensemble des moniteurs, ou
+points d'observation, depuis lesquels on mesure la topologie. C'est l'une des
+principales faiblesses de la méthode historique, et c'est ce constat qui en
+premier lieu nous a servi de piste pour mettre au point nos méthodes de mesure
+distribuées.
+
+Pour réaliser nos mesures, nous avons utilisé à plusieurs reprises
+l'infrastructure PlanetLab. C'est une infrastructure riche et très libérale dans
+ses conditions d'utilisation, qui nous a permis d'établir la faisabilité et la
+pertinence de notre approche. Cependant, elle reste limitée, à la fois en termes
+de nombre de moniteurs (quelques centaines), et surtout en termes de diversité
+des sous-réseaux. En effet, ils n'appartiennent qu'à une collection relativement
+limitée d'AS (environ 200 au moment de nos mesures) et pour beaucoup sont
+hébergés dans des réseaux académiques. En conséquence, on peut craindre qu'ils
+ne fournissent qu'une vision partielle du réseau. S'il est peu vraissemblable
+que cela impacte l'estimation de la fraction des n\oe{}uds de degrés faibles, en
+revanche, il est clair que cela peut avoir un effet sur l'estimation de la
+fraction des n\oe{}uds de degré fort. Nos travaux sur les tables de tranmission
+suggèrent également que dans un tel cadre, l'ensemble des moniteurs de PlanetLab
+est insuffisant pour obtenir une vision fiable de l'objet mesuré.
+
+Les prérequis pour effectuer une mesure \udpping depuis une machine hôte sont
+assez simples, mais exigeants: il faut pouvoir émettre des paquets \udp
+arbitraires, et surtout disposer d'un accès non filtré au traffic \icmp entrant
+pour pouvoir écouter les réponses. Le premier critère est assez facile à
+obtenir, mais le second exige souvent des privilèges particuliers sur un réseau
+qui ne filtre pas le traffic \icmp. Nous avons envisagé plusieurs options, dont
+certaines sont plus ou moins faciles à mettre en oeuvre :
+\begin{itemize}
+  \item {\em DIMES}~\cite{dimes}: Le projet DIMES rassemble des
+  participants volontaires exécutant sur leur machine, souvent personelle, un programme agent qui permet
+  d'exécuter des mesures. Il est aujourd'hui surtout utilisé pour collecter des
+  résultats de \traceroute, mais pourrait être adapté pour réaliser des mesures
+  \udpping.
+  \item {\em Looking glasses}, {\em routeviews}~\cite{routeviews}: Mis à la
+  disposition du public principalement afin de partager des informations
+  relatives aux protocoles de routages par les fournisseurs d'accès à Internet
+  ou les points d'échange Internet, les serveurs de {\em looking glasses} fournissent en général la possibilité de consulter
+  un annuaire \bgp, ou d'exécuter \icmp~\ping, \tcp~\ping ou \traceroute.
+  Déployer \udpping sur ces serveurs requiert l'accord de parties privées ou
+  industrielles, mais offrirait un point de vue très riche, au sein du c\oe{}ur
+  d'Internet.
+  \item {\em RIPE Atlas}~\cite{ripeatlas}: {\em RIPE Atlas} déploie
+  gratuitement, auprès d'institutions volontaires, un serveur de mesures embarqué, constitué d'une
+  puce alimentée par USB et connectée à Internet via un port RJ45 traditionnel.
+  Sa puce contient un système d'exploitation simplifié dédié à effectuer des
+  mesures telles que \ping ou \traceroute. À mesure de son déploiement, le
+  réseau RIPE Atlas pourrait devenir un complément intéressant à
+  PlanetLab.
+  \item {\em CAIDA Ark}~\cite{caida}: L'infrastructure {\em Ark} utilisée par
+  {\em CAIDA} pour réaliser ses prélèvements \traceroute distribués est
+  semblable à celle de {\em RIPE Atlas} et de {\em PlanetLab}: des institutions
+  volontaires hébergent des machines dédiées à réaliser des prélèvements
+  distribués et comprend plusieurs dizaines de moniteurs répartis dans le monde.
+  Une version embarquée basée sur le {\em Raspberry Pi} est très proche des sondes {\em RIPE Atlas}. Certains moniteurs {\em Ark} ont déjà été
+  utilisés pour des mesures tierces, comme par exemple {\em
+  MERLIN}~\cite{merlin}. Cette infrastructure est déjà coutumière des mesures
+  distribuées à très grande échelle, et serait donc un complément naturel à
+  PlanetLab, bien que ses moniteurs soient vraissemblablement au moins en partie
+  redondants.
+  \item Hébergeurs commerciaux: Afin de proposer des CDNs\footnote{{\em
+  Content Delivery Networks}, réseaux de diffusion de contenu} efficaces, de
+  nombreux hébergeurs commerciaux, tels qu'Amazon Web Services~\cite{aws} ou
+  Microsoft Azure~\cite{msazure}, ont déployé des serveurs localisés dans le
+  monde entier, et offrent des machines virtuelles ou dédiées à leurs clients.
+  Bien que le nombre de sites soit très limité (quelques dizaines), ils sont
+  choisis par leurs propriétaires précisément pour leur bonne répartition dans
+  le réseau, et pourraient donc offrir une vision de la topologie complémentaire
+  à celle fournie par les hôtes académiques.
+  \item Extension de navigateur ou applet: Les navigateurs Internet ne
+  fournissent pas d'API exposant les fonctionalités de réseau bas niveau
+  (particulièrement pas l'écoute d'\icmp), mais en revanche, les extensions de
+  navigateur ou les applets (Java, Flash, Silverlight\ldots) peuvent, avec
+  l'autorisation du client, exécuter du code relativement arbitraire. Développer
+  un agent de mesure sous cette forme, pour \udpping comme pour d'autres
+  primitives, pourrait être un complément crédible à un projet tel que {\em
+  DIMES}. Son intérêt résiderait dans la simplicité pour l'utilisateur de
+  participer à des mesures, mais il pose la question de la faisabilité de son
+  déploiement à grande échelle.
+  \item Application mobile : Les appareils connectés mobiles, tels que
+  les téléphones ou les tablettes, exposent le plus souvent aux applications un
+  accès, même limité, à la couche réseau. Ces terminaux présentent un intérêt en
+  termes de diversité des localisations et des routes, mais également un certain
+  nombre de difficultés. Sur les systèmes d'exploitations les plus utilisés du
+  marché, l'accès aux {\em sockets} privilégiés n'est pas disponible par défaut.
+  Certaines technologies de connectivité sans fil passent par des réseaux
+  virtuels (opaques aux niveau \LL et \LLL), ce qui complexifie l'interprétation
+  des mesures. Enfin, ces appareils ont souvent des capacités en énergie
+  limitées, et une activité réseau prolongée peut induire une forte
+  consommation.
+  \item Sondes embarquées : À la lisière entre l'application mobile et les
+  sondes de {\em RIPE Atlas}, les {\em dongles} ARM\footnote{À titre d'exemple,
+  la clé multimedia {\em Google Chromecast}~\cite{chromecast} repose sur un
+  {\em dongle} ARM de ce type.} semblent être une opportunité très prometteuse.
+  Fabriqués à très bas coût (de l'ordre entre 5€ et 20€ à l'unité), ces
+  terminaux de quelques centimètres carrés alimentés en USB embarquent des architectures ARM largement assez
+  performantes pour réaliser des mesures réseau, et même effectuer une partie
+  de leur traitement localement. Plusieurs systèmes d'exploitations très
+  documentés supportent ce type de terminaux et rendent trivial le portage des
+  primitives de mesure. Tout comme pour les sondes {\em RIPE Atlas}, il se pose
+  la question du déploiement et de la maintenance occasionelle.
+\end{itemize}
+
+Pour toutes ces solutions, un problème commun demeure : la difficulté pour un
+réseau ciblé (ou simplement traversé) par les sondes \udpping à différencier une
+activité de mesure d'une activité hostile de type déni de service. En effet, les
+administrateurs de réseau sont souvent peu enclins à autoriser les hôtes à
+émettre des paquets \udp vers des destinations aléatoires, car ils s'exposent
+alors au risque du {\em blacklisting}. Cependant, de notre expérience pratique,
+seuls des réseaux mal configurés (principalement au niveau des tables \udp des
+pare-feux) sont susceptibles de tomber en panne à cause d'une mesure \udpping
+distribuée.
+
+\subsubsection{Approche complémentaire pour la bordure}
+
+La méthode de mesure du degré par des moniteurs distribués vers des cibles
+aléatoires est conçue pour mesurer le degré des n\oe{}uds du c\oe{}ur d'Internet.
+En effet, comme détaillé au \refchap{traceroute} et au \refchap{udpping}, les
+n\oe{}uds de la bordure d'Internet ont des interfaces intrinsèquement difficiles à
+observer à l'aide d'une mesure distribuée telle que celle que nous emloyons.
+
+Nous pensons que cette limitation n'a que peu d'impact conceptuel, dans la
+mesure où la complexité du routage et la plupart des problématiques associées se
+situent dans le c\oe{}ur d'Internet, mais afin d'établir la distribution de degré
+de la topologie complète et pas simplement du c\oe{}ur, il faudrait être
+capable de mesurer la distribution de degré de la bordure d'Internet. Une
+approche complémentaire doit donc être menée, attachée spécifiquement à mesurer
+cette propriété. Comme par définition la bordure d'Internet est constituée
+d'arbres, une piste pourrait être de réaliser certaines hypothèses sur ces
+arbres (par exemple sur leur régularité), et de tenter de mesurer les paramètres
+typiques de ces modèles dans la réalité (par exemple la profondeur et le degré
+moyen de ces arbres).
+
+\subsection{Echantillonage orienté propriété}
+\label{subsec:conclusion-sampling}
+
+Notre approche est conceptuellement novatrice dans ce qu'elle s'attaque à
+mesurer directement une propriété topologique sur un réseau réel plutôt qu'à
+tenter d'établir une carte sur laquelle on lirait ensuite cette propriété. Plus
+précisément, l'approche est de bâtir une primitive de mesure qui permet
+d'estimer une certaine propriété $p(u)$ d'un n\oe{}ud (ou d'une arete) $u$ d'un
+sous-ensemble $V$ de n\oe{}uds (ou d'aretes) du réseau $G$, et une méthode qui
+permet d'échantilloner des n\oe{}uds (ou des aretes) dans ce sous-ensemble,
+d'une manière qui soit uniforme vis à vis de la propriété mesurée, ou au moins
+dont la non-uniformité est maîtrisée (c'est à dire qu'on peut la corriger
+\aposteriori). Dans le cas d'\udpping distribué, par exemple, la propriété
+estimée est le degré (nombre d'interfaces), le réseau $G$ est le c\oe{}ur
+physique d'Internet, et $V$ est le sous-ensemble des n\oe{}uds répondant à
+\udpping.
+
+Nous pensons que cette approche simple peut être déclinée, à la fois à d'autres
+propriétés ou d'autres réseaux, et avec d'autres méthodes d'échantillonage.
+
+\subsubsection{Application à d'autres réseaux}
+
+De nombreux réseaux, à l'instar d'Internet, reposent sur une indexation
+à 32 bits ou moins, et à ce titre, sont aisés à échantilloner de manière
+uniforme.
+C'était par exemple le cas des utilisateurs Facebook jusqu'à 2007, des
+commentaires sur le site Slashdot, ou encore des utilisateurs du jeu League of
+Legends sur une région donnée. La plupart de ces réseaux offrent une API
+publique \http, mais dont l'accès est souvent strictement limité en nombre de
+requêtes par unité de temps. Leur cartographie complète est donc peu
+vraissemblable, mais un échantillonage adapté peut permettre d'estimer des
+propriétés topologiques des réseaux sous-jacents, pour peu que l'on démontre
+l'absence de biais indirect lié à l'attribution d'un identifiant (par exemple,
+lié à l'ancienneté d'un compte).
+
+\subsubsection{Marche aléatoire orientée propriété}
+
+Hormis l'échantillonage uniforme lié à l'indexation numérique, une autre méthode
+d'échantillonage intéressante et plus spécifique aux graphes est la marche
+aléatoire. La difficulté repose alors sur l'uniformité de l'échantillonage
+relativement à la propriété mesurée, mais une étude rigoureuse peut souvent
+permettre de s'en abstraire. Cette approche a par exemple été mise en oeuvre
+dans le cas de l'échantillonage sans biais relatif au degré dans le cas de
+Facebook~\cite{gjoka2010walking}. Des techniques similaires peuvent également
+s'appliquer à des réseaux qu'il est naturel de parcourir avec des marches
+aléatoires, comme par exemple les réseaux de pages web ou les réseaux
+P2P\footnote{{\em Peer to peer}, pair-à-pair.}.
+
+\subsection{Nouveaux objets d'intérêt}
+\label{subsec:conclusion-objects}
+\subsubsection{Réseau de routage pondéré}
+
+Au moment de valider notre première mesure \traceroute distribuée, et à nouveau
+pour valider la mesure \udpping distribuée, nous avons été confrontés à la même
+interrogation : que penser d'une interface d'une cible qui n'est observée que
+par un seul ou un très petit nombre de moniteurs ? Cette interface est-elle un
+faux positif, c'est à dire une interface n'appartenant pas réellement à la cible
+mais observée par erreur par un petit nombre de moniteurs, ou une interface
+"rare", difficile à observer ? Dans ce dernier cas, comment justifier le peu de
+robustesse de la notion de degré dans un cas où manifestement, on aurait
+aisément pu "rater" cette interface en supprimant un seul moniteur ?
+
+La question plus générale qui se pose est celle de l'importance relative des
+interfaces d'un routeur (ou des arêtes d'un n\oe{}ud) dans leur activité de
+routage. On peut concevoir cette idée soit \apriori, comme une {\em probabilité
+d'utilisation} ou une table de routage, soit \aposteriori, comme un {\em taux
+d'utilisation}. Dans les deux cas il s'agit de considérer la matrice d'adjacence
+de la topologie physique, pondérée par des réels qui représentent l'importance
+d'une interface dans son activité de routage. Cette notion, qui nous semble être
+le réel objet d'importance derrière la distribution de degré pour l'étude du
+routage, qu'il soit en modélisation ou en analyse, a inspiré nos travaux sur les
+tables de tranmission, mais il reste à compléter, notamment dans son approche
+formelle et son lien avec les algorithmes de routage. Une estimation de cette
+matrice sur le réseau réel d'une part, sur des graphes synthétiques d'autre
+part, nous permettrait de valider ou d'invalider des modèles de topologies.
+
+\subsubsection{Topologie égo-centrée avec \udpexplore}
+
+Bien que les sondes d'\udpping soient à la base conçue afin de lister toutes les
+interfaces dans le c\oe{}ur d'une cible donnée à partir d'un ensemble distribué
+de moniteurs, nous avons montré que nous pouvions utiliser des sondes similaires
+sous la forme de l'outil \udpexplore. \udpexplore est utilisé dans notre travail
+comme un simple outil de validation pour détecter le cas où deux moniteurs sont
+dans le même sous-arbre de la bordure, mais il permet de lister depuis un
+moniteur d'une part toutes les interfaces tournées vers le c\oe{}ur qui
+appartiennent à des n\oe{}uds soit dans le c\oe{}ur, soit dans d'autres
+sous-arbres, d'autre part toutes les interfaces tournées vers le moniteur de
+n\oe{}uds qui sont plus haut dans le même sous-arbre.
+
+Plus généralement, l'objet auquel donne accès les sondes \udpping depuis un
+moniteur est l'ensemble des interfaces à une certaine distance $d$ en termes de
+{\em hops} au niveau \ip d'un n\oe{}ud et qui sont soit des interfaces tournées
+vers le moniteur de n\oe{}uds dans le même sous arbre que lui tournées vers le
+c\oe{}ur, soit des interfaces tournées vers le c\oe{}ur de n\oe{}uds qui ne sont
+pas dans le même sous-arbre.
+En plus d'un intérêt propre à cet objet (qui donne en quelque sorte la vision
+projetée d'un n\oe{}ud sur la topologie du c\oe{}ur), c'est un critère de plus
+pour valider ou invalider un modèle de topologie synthétique, puisqu'il s'agit
+d'une propriété qu'on peut également calculer sur un réseau formel ou un réseau
+simulé et la confronter aux observations. Cette approche peut compléter celle
+qui a déjà été menée par Latapy \etal~\cite{latapy2008radar}.
+
+\subsubsection{Routes longues}
+
+Lors de nos travaux préliminaires sur \traceroute, nous avons été amenés à
+réaliser des études sur la longueur des routes sous-jacentes à nos observations.
+Plus précisément, nous avons constaté que si nous répétions \traceroute depuis
+un moniteur donné vers une cible donnée, alors le \ttl nécessaire avant
+d'atteindre la cible pouvait montrer une variabilité.
+
+Or, \traceroute s'arrête généralement d'envoyer des sondes dès qu'une sonde
+\icmp répond. Des travaux ultérieurs ont montré que des sondes \icmp successives
+pouvaient emprunter des routes différentes, et qu'une sonde de \traceroute peut
+être interprété comme un certain tirage aléatoire d'une des routes parmi les
+routes possibles. Considérons le cas simplifié où seules deux routes $a$ et $b$
+existent entre le moniteur $m$ et la cible $t$, de longueurs respectives $|a| =
+10$ et $|b| = 20$, d'une probabilité uniforme de $\frac{1}{2}$. Dès la sonde de
+\ttl $10$, il suffit qu'une seule sonde emprunte la route $a$ pour que
+\traceroute s'arrête; or pour observer la route $b$ dans son intégralité, il
+faut au moins atteindre le \ttl 20. En particulier, la probabilité d'observer le
+saut $|b| - 1$ avec \traceroute est majorée par $\frac{1}{2^{|b| - 1 - |a|}}
+= \frac{1}{512}$. La probabilité d'observer le voisin de $t$ induit par $b$ est
+donc très faible.
+
+\traceroute n'est probablement pas l'outil adapté pour observer ces routes, mais
+dans le cas d'\udpping, l'idée se tranpose en répétant de très nombreuses fois
+l'envoi de sondes depuis un même moniteur vers une cible donnée, dans l'espoir
+d'observer ces interfaces difficiles à observer. Les considérations de charge
+portée par le voisinage de la cible sont à étudier, mais l'étude des routes
+longues, qui sont occultées par la plupart des travaux basés sur \traceroute,
+constitue selon nous une opportunité d'observer davantage d'informations, même
+depuis un seul moniteur.

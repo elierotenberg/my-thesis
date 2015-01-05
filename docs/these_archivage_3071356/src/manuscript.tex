@@ -1,0 +1,50 @@
+\RequirePackage{snapshot} % for bundledoc
+
+
+\documentclass[a4paper,12pt,twoside]{StyleThese}
+\usepackage[utf8]{inputenc}
+\input{lib/packages}
+\input{lib/newcommands}
+\input{lib/definitions}
+\input{lib/hyphenation}
+\input{lib/layout}
+
+%###
+\let\chaptertitle=\chapter
+\let\introformatting=\relax
+\let\outroformatting=\relax
+%###
+
+\begin{document}
+
+%%% Headers
+
+\input{headers/title}
+\input{headers/remerciements}
+\blankpage
+\input{headers/toc}
+
+%%% Chapters
+
+\input{chapters/intro}
+\input{chapters/traceroute}
+\input{chapters/udpping}
+\input{chapters/revtables}
+\input{chapters/conclusion}
+
+%%% Appendices
+
+% \appendix
+% \appendixpage
+% \addappheadtotoc
+% 
+% 
+% \input{appendices/protocoles}
+% \input{appendices/configuration}
+% \input{appendices/planetlab}
+% \input{appendices/implementations}
+
+\bibliographystyle{plain}
+\bibliography{bib/these}
+
+\end{document}

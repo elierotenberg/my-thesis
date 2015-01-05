@@ -1,0 +1,18 @@
+\begin{tabular}{ | p{.45\columnwidth} | c | c | c | }
+    \cline{2-4}
+%    \multicolumn{1}{c|}{}                                                        &  \multicolumn{3}{c|}{measurement} \\
+    \multicolumn{1}{c|}{} & 1-st & 2-nd & 3-rd \\
+    \hline
+    Nb running monitors  & 619 & 625 & 622 \\
+    Nb answering targets & 2849740 & 2734548 & 2699642 \\
+    Nb targets answering incorrectly & 10150 & 9842 & 11048 \\
+    Nb monitors receiving answers from less than 80\% of targets & 198 & 183 & 180 \\
+    Nb targets answering to less than 80\% of monitors& 590605 & 527346 & 544252 \\
+    Nb targets $t$ such that $t \not\in M(t)$ & 2634226 & 2519320 & 2484483 \\
+%    Targets $t$ such that $t \in B(M)$ & 0 & 0 & 0 \\
+    Nb interfaces in $B(M)$ & 1040 & 1107 & 1097 \\
+    Nb targets with only one interface not in $B(M)$ & 2842481 & 2727422 & 2692135
+    \\
+    Final number of targets & 5593 & 5623 & 5619 \\
+    \hline
+\end{tabular}

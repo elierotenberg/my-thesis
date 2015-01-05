@@ -1,0 +1,164 @@
+\relax 
+\citation{caida}
+\citation{dimes}
+\citation{iplane}
+\citation{planetlab}
+\citation{ripeatlas}
+\citation{dimes}
+\citation{routeviews}
+\citation{ripe-ris}
+\citation{caida}
+\citation{roughan201110}
+\citation{willinger}
+\citation{DBLP:conf/infocom/LakhinaBCX03}
+\citation{DBLP:journals/jacm/AchlioptasCKM09}
+\citation{DBLP:journals/tcs/DallAstaABVV06}
+\citation{DBLP:journals/cn/GuillaumeLM06}
+\citation{DBLP:conf/infocom/LatapyM08}
+\citation{alias-bias}
+\citation{keys2010internet}
+\citation{paristraceroute}
+\citation{rfc1122}
+\citation{rfc1812}
+\@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}}
+\newlabel{sec:intro}{{I}{1}}
+\@writefile{toc}{\contentsline {section}{\numberline {II}Our approach}{1}}
+\newlabel{sec:approach}{{II}{1}}
+\citation{CT01}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Monitor $m$ sends a UDP packet with destination address $t$ on an unallocated port; the node $r(t)$ answers with an ICMP packet with source address $i$, and thus $m$ discovers interface $i$ of $r(t)$.}}{2}}
+\newlabel{fig:ping-udp}{{1}{2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Left: a set of monitors (the squared nodes) send probes towards a target IP address $t$ and obtain the four interfaces of router $r(t)$. Right: the same monitors send probes towards another target $t'$ but miss most interfaces of $r(t')$.}}{2}}
+\newlabel{fig:approach}{{2}{2}}
+\@writefile{toc}{\contentsline {section}{\numberline {III}Proof of concept}{2}}
+\newlabel{sec:concept}{{III}{2}}
+\citation{CT01}
+\citation{CT01}
+\newlabel{fig:simul.degdist}{{3(a)}{3}}
+\newlabel{sub@fig:simul.degdist}{{(a)}{3}}
+\newlabel{fig:simul.scat}{{3(b)}{3}}
+\newlabel{sub@fig:simul.scat}{{(b)}{3}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Simulations with different number of monitors (12, 25, 50, 100, 200, 400 and 800) over graphs of $2.5*10^6$ nodes whose degree distribution follows either a Poisson law with average degree $25$ or a power law with exponent $2.1$.}}{3}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {Observed degree distribution}}}{3}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {Scatter plot of the real degree vs. the observed degree}}}{3}}
+\newlabel{fig:simul}{{3}{3}}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Monitors}{3}}
+\newlabel{sec:monitors}{{IV}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}}Colocated monitors}{3}}
+\newlabel{sec:colocated}{{\unhbox \voidb@x \hbox {IV-A}}{3}}
+\citation{paristraceroute}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Three monitors, $m_1$, $m_2$ and $m_3$ are actually colocated, and therefore they may observe a unique interface for any given target router $r(i)$. They are redundant regarding the quality of the measurement.}}{4}}
+\newlabel{fig:colocated-monitors-observation}{{4}{4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}}Diversity of views}{4}}
+\newlabel{sec:diversity-of-view}{{\unhbox \voidb@x \hbox {IV-B}}{4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}}Convergence of observations}{4}}
+\newlabel{sec:convergence}{{\unhbox \voidb@x \hbox {IV-C}}{4}}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Targets}{4}}
+\newlabel{sec:targets}{{V}{4}}
+\citation{keys2010internet}
+\citation{rfc1466}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces If we target an interface $i$ that belongs to a border router $r(i)$ then our measurements may see more than one interface for $r(i)$. However, only one of them does not belong to $B(M)$, as displayed in this picture: all interfaces of $B(M)$ are marked with a small dash. }}{5}}
+\newlabel{fig:targets}{{5}{5}}
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Bias correction}{5}}
+\newlabel{sec:bias}{{VI}{5}}
+\citation{planetlab}
+\@writefile{toc}{\contentsline {section}{\numberline {VII}Measurement}{6}}
+\newlabel{sec:measurement}{{VII}{6}}
+\newlabel{sec:data-collection}{{VII}{6}}
+\newlabel{sec:data-cleaning-filtering}{{VII}{6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Left (resp. right): for each number $x$ on the horizontal axis, we plot the number of targets (resp. monitors) that sent (resp. received) at least $x$ answers to our probes, for each of our three measurements.}}{6}}
+\newlabel{fig:filters}{{6}{6}}
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Key post-processing steps for our three measurements.}}{6}}
+\newlabel{tab:summary}{{I}{6}}
+\@writefile{toc}{\contentsline {section}{\numberline {VIII}Results}{6}}
+\newlabel{sec:results}{{VIII}{6}}
+\newlabel{sec:observed-distrib}{{VIII}{6}}
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces The degree distributions obtained from our three measurements (after bias correction): for each degree $k$, we give the estimated fraction $p_k$ of core routers with degree $k$.}}{7}}
+\newlabel{tab:distribs}{{II}{7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Inverse cumulative degree distribution obtained from our three measurements, after bias correction: for each value $x$ on the horizontal axis, we plot the fraction of core routers having degree higher than or equal to $x$ (log-log scale).}}{7}}
+\newlabel{fig:distribs}{{7}{7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces  Left: evolution of the quality of the monitor set when we add colocation classes. Right: convergence of the fraction of routers of degree $k$ with the number of colocation classes. }}{7}}
+\newlabel{fig:propdeg-classes}{{8}{7}}
+\newlabel{fig:quality-classes}{{8}{7}}
+\@writefile{toc}{\contentsline {section}{\numberline {IX}Assessment of results}{7}}
+\newlabel{sec:assessment}{{IX}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IX-A}}Quality of the monitor set}{7}}
+\newlabel{sec:results-monitors-assessment}{{\unhbox \voidb@x \hbox {IX-A}}{7}}
+\citation{280555}
+\citation{DBLP:conf/sigcomm/FaloutsosFF99}
+\citation{DBLP:conf/infocom/LakhinaBCX03}
+\citation{DBLP:journals/jacm/AchlioptasCKM09}
+\citation{willinger}
+\citation{MDBP10}
+\citation{DBLP:journals/tcs/DallAstaABVV06}
+\citation{DBLP:journals/cn/GuillaumeLM06}
+\citation{DBLP:conf/infocom/LatapyM08}
+\citation{roughan201110}
+\citation{paristraceroute}
+\citation{pansiot2012}
+\citation{roughan201110}
+\citation{willinger}
+\citation{DBLP:conf/imw/BarfordBBC01}
+\citation{DBLP:conf/infocom/LatapyM08}
+\citation{DBLP:conf/infocom/LakhinaBCX03}
+\citation{CLR10}
+\citation{CT01}
+\citation{kurant2011towards}
+\citation{gjoka2010walking}
+\citation{stutzbach2009unbiased}
+\citation{DBLP:conf/infocom/GovindanT00}
+\citation{DBLP:journals/ton/GunesS09}
+\citation{alias-bias}
+\citation{keys2010internet}
+\citation{iffinder}
+\citation{caida}
+\citation{dimes}
+\citation{iplane}
+\citation{planetlab}
+\citation{ripeatlas}
+\citation{ripeatlas}
+\citation{dimes}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Assessment by simulations. Left: the observed degree distributions with various numbers of monitors. Right: correlations between observed and real degree with $200$ monitors (one dot per node and median).}}{8}}
+\newlabel{fig:assess-dist}{{9}{8}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IX-B}}Simulation bootstrap}{8}}
+\@writefile{toc}{\contentsline {section}{\numberline {X}Related work}{8}}
+\newlabel{sec:related}{{X}{8}}
+\citation{dimes}
+\citation{ripeatlas}
+\bibstyle{IEEEtran}
+\bibdata{IEEEabrv,biblio}
+\bibcite{caida}{1}
+\bibcite{dimes}{2}
+\bibcite{iplane}{3}
+\bibcite{planetlab}{4}
+\bibcite{ripeatlas}{5}
+\bibcite{routeviews}{6}
+\bibcite{ripe-ris}{7}
+\bibcite{roughan201110}{8}
+\bibcite{willinger}{9}
+\bibcite{DBLP:conf/infocom/LakhinaBCX03}{10}
+\bibcite{DBLP:journals/jacm/AchlioptasCKM09}{11}
+\bibcite{DBLP:journals/tcs/DallAstaABVV06}{12}
+\bibcite{DBLP:journals/cn/GuillaumeLM06}{13}
+\bibcite{DBLP:conf/infocom/LatapyM08}{14}
+\bibcite{alias-bias}{15}
+\bibcite{keys2010internet}{16}
+\bibcite{paristraceroute}{17}
+\bibcite{rfc1122}{18}
+\bibcite{rfc1812}{19}
+\bibcite{CT01}{20}
+\bibcite{rfc1466}{21}
+\bibcite{280555}{22}
+\bibcite{DBLP:conf/sigcomm/FaloutsosFF99}{23}
+\bibcite{MDBP10}{24}
+\bibcite{pansiot2012}{25}
+\bibcite{DBLP:conf/imw/BarfordBBC01}{26}
+\bibcite{CLR10}{27}
+\bibcite{kurant2011towards}{28}
+\bibcite{gjoka2010walking}{29}
+\bibcite{stutzbach2009unbiased}{30}
+\bibcite{DBLP:conf/infocom/GovindanT00}{31}
+\bibcite{DBLP:journals/ton/GunesS09}{32}
+\bibcite{iffinder}{33}
+\@writefile{toc}{\contentsline {section}{\numberline {XI}Conclusion and discussion}{9}}
+\newlabel{sec:conclusion}{{XI}{9}}
+\@writefile{toc}{\contentsline {section}{References}{9}}

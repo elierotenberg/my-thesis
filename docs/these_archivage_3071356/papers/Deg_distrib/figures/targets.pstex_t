@@ -1,0 +1,17 @@
+\begin{picture}(0,0)%
+\includegraphics{figures/targets.pstex}%
+\end{picture}%
+\setlength{\unitlength}{1243sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(5668,4588)(4052,-3795)
+\put(9496,-1561){\makebox(0,0)[b]{\smash{{\SetFigFont{8}{9.6}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$m$}%
+}}}}
+\put(8911,-1951){\makebox(0,0)[b]{\smash{{\SetFigFont{8}{9.6}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$r(i)$}%
+}}}}
+\end{picture}%

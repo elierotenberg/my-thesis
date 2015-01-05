@@ -1,0 +1,14 @@
+#TeXlipse project settings
+#Sun Dec 22 07:24:35 CET 2013
+markTmpDer=true
+builderNum=3
+outputDir=
+makeIndSty=
+bibrefDir=
+outputFormat=ps
+tempDir=tmp
+mainTexFile=infer-tables.tex
+outputFile=infer-tables.ps
+langSpell=en
+markDer=true
+srcDir=

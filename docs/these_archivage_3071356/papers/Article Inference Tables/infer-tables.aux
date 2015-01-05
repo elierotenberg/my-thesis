@@ -1,0 +1,86 @@
+\relax 
+\citation{udpping2013}
+\citation{rfc1122}
+\citation{rfc1812}
+\citation{udpping2013}
+\citation{CLR10}
+\@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}}
+\newlabel{sec:intro}{{I}{1}}
+\@writefile{toc}{\contentsline {section}{\numberline {II}Measurement method}{1}}
+\newlabel{sec:measurementmethod}{{II}{1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-A}}UDP Ping}{1}}
+\newlabel{sec:udpping}{{\unhbox \voidb@x \hbox {II-A}}{1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Monitor $m$ sends a UDP packet with destination address $t$ on an unallocated port; the node $r(t)$ answers with an ICMP packet with source address $i$, and thus $m$ discovers interface $i$ of $r(t)$.}}{1}}
+\newlabel{fig:ping-udp}{{1}{1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-B}}Distributed UDP Ping}{2}}
+\newlabel{sec:distribudpping}{{\unhbox \voidb@x \hbox {II-B}}{2}}
+\@writefile{toc}{\contentsline {section}{\numberline {III}Constraints obtained from measurement}{2}}
+\newlabel{sec:constraints}{{III}{2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}Structure of the rules}{2}}
+\newlabel{subsec:rules}{{\unhbox \voidb@x \hbox {III-A}}{2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-B}}Constraints from Distributed UDP Ping}{2}}
+\newlabel{subsec:constraints}{{\unhbox \voidb@x \hbox {III-B}}{2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Example of a routing table. The router has two interfaces, 83.238.96.26 and 195.114.175.54. If the router needs to route a packet, it choses the longest matching prefix from its table and forwards it to the next gateway through one of the exit interfaces. Rule 1 matches a prefix of length 13. Rules 4 and 5 show examples of multiple exit interfaces configurations, probably implementing a form of load-balanding.}}{2}}
+\newlabel{fig:table-example}{{2}{2}}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Routing table inference}{2}}
+\newlabel{sec:inference}{{IV}{2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}}Most specific routing table}{2}}
+\newlabel{subsec:mostspecific}{{\unhbox \voidb@x \hbox {IV-A}}{2}}
+\citation{rfc1518}
+\citation{rfc1519}
+\citation{rfc4632}
+\citation{Mcauley93fastrouting}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}}Generalizing hypotheses}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}}CIDR prefixes generalization}{3}}
+\newlabel{subsec:cidr}{{\unhbox \voidb@x \hbox {IV-C}}{3}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}1}Inference algorithm}{3}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces CIDR table inference}}{3}}
+\newlabel{algo:infertable}{{1}{3}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}2}Proof and speed of the algorithm}{3}}
+\citation{routeviews}
+\citation{udpping2013}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-D}}AS prefixes generalization}{4}}
+\newlabel{subsec:cidr-as}{{\unhbox \voidb@x \hbox {IV-D}}{4}}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Measurement}{4}}
+\newlabel{sec:measurement}{{V}{4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-A}}Repeated Distributed UDP Ping}{4}}
+\citation{280555}
+\citation{DBLP:conf/sigcomm/FaloutsosFF99}
+\citation{DBLP:conf/infocom/LakhinaBCX03}
+\citation{DBLP:journals/jacm/AchlioptasCKM09}
+\citation{willinger}
+\citation{paristraceroute}
+\citation{pansiot2012}
+\citation{roughan201110}
+\citation{willinger}
+\citation{DBLP:conf/imw/BarfordBBC01}
+\citation{DBLP:conf/infocom/LatapyM08}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Inverse cumulative distribution of the number of entries using three refinement methods: most specific, CIDR prefixes, and AS prefixes.}}{5}}
+\newlabel{fig:inference-refinement}{{3}{5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-B}}Impact of the inference method}{5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-C}}Impact of the number of monitors}{5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Inverse cumulative distribution of the number of entries in the most specific table for several monitors subset sizes.}}{5}}
+\newlabel{fig:most-specific}{{4}{5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Inverse cumulative distribution of the number of entries in the CIDR prefixes table for several monitors subset sizes.}}{5}}
+\newlabel{fig:cidr}{{5}{5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Inverse cumulative distribution of the number of entries in the AS prefixes table for several monitors subset sizes.}}{5}}
+\newlabel{fig:cidr-as}{{6}{5}}
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Related work}{5}}
+\newlabel{sec:relatedwork}{{VI}{5}}
+\citation{DBLP:conf/infocom/LakhinaBCX03}
+\citation{CLR10}
+\citation{CT01}
+\citation{alias-bias}
+\citation{keys2010internet}
+\citation{iffinder}
+\citation{caida}
+\citation{dimes}
+\citation{iplane}
+\citation{planetlab}
+\citation{ripeatlas}
+\citation{ripeatlas}
+\citation{dimes}
+\bibstyle{IEEEtran}
+\bibdata{IEEEabrv,biblio}
+\@writefile{toc}{\contentsline {section}{\numberline {VII}Conclusion}{6}}
+\newlabel{sec:conclusion}{{VII}{6}}
