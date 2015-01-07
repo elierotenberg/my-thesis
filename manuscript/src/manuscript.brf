@@ -26,14 +26,14 @@
 \backcite {isc-report}{{22}{1.7}{figure.caption.8}}
 \backcite {paxson1997we}{{23}{1.2.2}{subsection.1.2.2}}
 \backcite {govindan1997analysis}{{23}{1.2.3}{subsection.1.2.3}}
-\backcite {pansiot1998routes}{{23}{1.2.3}{subsection.1.2.3}}
+\backcite {280555}{{23}{1.2.3}{subsection.1.2.3}}
 \backcite {faloutsos1999power}{{23}{1.2.3}{subsection.1.2.3}}
 \backcite {sarac2004tracetree,latapy2008radar}{{23}{1.2.3}{subsection.1.2.3}}
 \backcite {merlin}{{23}{1.2.3}{subsection.1.2.3}}
 \backcite {GunesS09,paristraceroute,keys2010internet,keysiffinder,roughan201110,pansiot2012,alias-bias}{{23}{1.2.3}{subsection.1.2.3}}
-\backcite {roughan201110,willinger,LakhinaBCX03,AchlioptasCKM09,DallAstaABVV06,GuillaumeL05,GuillaumeLM06,latapy2008complex,MDBP10}{{23}{1.2.3}{subsection.1.2.3}}
-\backcite {willinger,latapy2008complex,BarfordBBC01}{{23}{1.2.3}{subsection.1.2.3}}
-\backcite {FaloutsosFF99}{{27}{2}{chapter.2}}
+\backcite {roughan201110,willinger,LakhinaBCX03,AchlioptasCKM09,DallAstaABVV06,GuillaumeL05,GuillaumeLM06,LatapyM08,MDBP10}{{23}{1.2.3}{subsection.1.2.3}}
+\backcite {willinger,LatapyM08,BarfordBBC01}{{23}{1.2.3}{subsection.1.2.3}}
+\backcite {faloutsos1999power}{{27}{2}{chapter.2}}
 \backcite {280555}{{27}{2}{chapter.2}}
 \backcite {paristraceroute,pansiot2012,roughan201110}{{27}{2}{chapter.2}}
 \backcite {LakhinaBCX03,AchlioptasCKM09,willinger,MDBP10,DallAstaABVV06,GuillaumeLM06,LatapyM08,roughan201110}{{27}{2}{chapter.2}}
@@ -42,7 +42,7 @@
 \backcite {rfc792}{{28}{2.1}{section.2.1}}
 \backcite {rfc1812}{{28}{2.1}{section.2.1}}
 \backcite {keys2010internet, alias-bias}{{31}{2.1}{hypothese.1}}
-\backcite {paristraceroute,willinger,SherwoodBS08,SpringMWA04,VigerACMLFT08,AugustinCOVFLMT06}{{32}{2.1}{hypothese.2}}
+\backcite {paristraceroute,willinger,SherwoodBS08,SpringMWA04,paristraceroute,AugustinCOVFLMT06}{{32}{2.1}{hypothese.2}}
 \backcite {GunesS09,alias-bias,keys2010internet}{{42}{2.4}{section.2.4}}
 \backcite {stephens1979tests}{{45}{2.4}{proposition.3}}
 \backcite {LakhinaBCX03,GuillaumeLM06}{{50}{2.7}{section.2.7}}
